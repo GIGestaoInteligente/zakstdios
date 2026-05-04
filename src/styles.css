@@ -140,5 +140,27 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .gradient-warm {
+    background: linear-gradient(135deg, oklch(0.95 0.03 95), oklch(0.92 0.04 75));
+  }
+  .gradient-sage {
+    background: linear-gradient(135deg, oklch(0.88 0.05 155), oklch(0.82 0.06 145));
+  }
+  .text-balance { text-wrap: balance; }
+  .fade-in { animation: fadeIn 0.7s ease-out both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
