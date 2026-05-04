@@ -62,21 +62,21 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 1rem;
+  --background: oklch(0.985 0.012 95);
+  --foreground: oklch(0.27 0.03 150);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.55 0.08 155);
+  --primary-foreground: oklch(0.985 0.01 95);
+  --secondary: oklch(0.94 0.025 90);
+  --secondary-foreground: oklch(0.3 0.04 150);
+  --muted: oklch(0.95 0.015 90);
+  --muted-foreground: oklch(0.5 0.03 150);
+  --accent: oklch(0.85 0.06 65);
+  --accent-foreground: oklch(0.3 0.04 150);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.929 0.013 255.508);
@@ -140,5 +140,27 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .gradient-warm {
+    background: linear-gradient(135deg, oklch(0.95 0.03 95), oklch(0.92 0.04 75));
+  }
+  .gradient-sage {
+    background: linear-gradient(135deg, oklch(0.88 0.05 155), oklch(0.82 0.06 145));
+  }
+  .text-balance { text-wrap: balance; }
+  .fade-in { animation: fadeIn 0.7s ease-out both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }

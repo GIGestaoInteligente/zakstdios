@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VlogRouteImport } from './routes/vlog'
+import { Route as EspecialidadesRouteImport } from './routes/especialidades'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VlogRoute = VlogRouteImport.update({
+  id: '/vlog',
+  path: '/vlog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EspecialidadesRoute = EspecialidadesRouteImport.update({
+  id: '/especialidades',
+  path: '/especialidades',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,72 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
+  '/contato': typeof ContatoRoute
+  '/especialidades': typeof EspecialidadesRoute
+  '/vlog': typeof VlogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
+  '/contato': typeof ContatoRoute
+  '/especialidades': typeof EspecialidadesRoute
+  '/vlog': typeof VlogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
+  '/contato': typeof ContatoRoute
+  '/especialidades': typeof EspecialidadesRoute
+  '/vlog': typeof VlogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/blog' | '/contato' | '/especialidades' | '/vlog'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/blog' | '/contato' | '/especialidades' | '/vlog'
+  id: '__root__' | '/' | '/blog' | '/contato' | '/especialidades' | '/vlog'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlogRoute: typeof BlogRoute
+  ContatoRoute: typeof ContatoRoute
+  EspecialidadesRoute: typeof EspecialidadesRoute
+  VlogRoute: typeof VlogRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vlog': {
+      id: '/vlog'
+      path: '/vlog'
+      fullPath: '/vlog'
+      preLoaderRoute: typeof VlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/especialidades': {
+      id: '/especialidades'
+      path: '/especialidades'
+      fullPath: '/especialidades'
+      preLoaderRoute: typeof EspecialidadesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +121,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlogRoute: BlogRoute,
+  ContatoRoute: ContatoRoute,
+  EspecialidadesRoute: EspecialidadesRoute,
+  VlogRoute: VlogRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
