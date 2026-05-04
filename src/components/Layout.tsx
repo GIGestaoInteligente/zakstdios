@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Phone, Instagram, Facebook, MapPin, Mail } from "lucide-react";
+import { Menu, X, Phone, Instagram, Facebook, MapPin, Mail, Search } from "lucide-react";
 
 const nav = [
   { to: "/" as const, label: "Home" },
@@ -15,45 +15,64 @@ export function Layout() {
   const loc = useLocation();
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Top contact bar */}
-      <div className="hidden md:block border-b border-border/40 bg-background">
-        <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5"><Phone size={12} className="text-primary" /> (11) 99999-0000</span>
-            <span className="flex items-center gap-1.5"><MapPin size={12} className="text-primary" /> Rua das Acácias, 123</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <a href="#" className="hover:text-primary transition"><Instagram size={14} /></a>
-            <a href="#" className="hover:text-primary transition"><Facebook size={14} /></a>
-          </div>
+      {/* Top utility bar */}
+      <div className="hidden md:block bg-background">
+        <div className="max-w-7xl mx-auto px-8 pt-2 pb-1 flex items-center justify-end text-xs text-foreground/80">
+          <a href="#" className="flex items-center gap-1.5 hover:text-primary">
+            <span className="w-4 h-4 rounded-full bg-secondary flex items-center justify-center text-[9px]">●</span>
+            Minha conta <span className="text-primary">|</span> Cadastre-se
+          </a>
+        </div>
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="border-t border-dashed border-primary/50" />
         </div>
       </div>
 
-      {/* Logo banner */}
-      <div className="bg-background">
-        <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-center relative">
-          <div className="absolute left-6 right-6 top-1/2 h-px bg-primary/30 hidden md:block" />
-          <Link to="/" className="relative z-10 flex flex-col items-center gap-1 bg-background px-6">
-            <div className="w-14 h-14 rounded-full gradient-sage flex items-center justify-center shadow-md">
-              <span className="font-serif text-2xl text-primary-foreground">S</span>
+      {/* Logo banner row */}
+      <div className="bg-background relative">
+        <div className="max-w-7xl mx-auto px-8 py-5 grid md:grid-cols-3 items-center gap-4">
+          {/* Left: phone */}
+          <div className="hidden md:flex items-center gap-3">
+            <span className="w-11 h-11 rounded-full gradient-sage flex items-center justify-center text-primary-foreground shadow">
+              <Phone size={18} />
+            </span>
+            <div className="leading-tight">
+              <p className="text-sm text-foreground font-medium">Agendamento</p>
+              <p className="text-base font-serif text-primary">(11) 99999-0000</p>
             </div>
-            <span className="font-serif text-2xl tracking-[0.2em] text-foreground">SERENO</span>
+          </div>
+
+          {/* Center: logo */}
+          <Link to="/" className="flex flex-col items-center justify-center">
+            <div className="w-16 h-16 rounded-full gradient-sage flex items-center justify-center shadow-md">
+              <span className="font-serif text-3xl text-primary-foreground">S</span>
+            </div>
+            <span className="font-serif text-2xl tracking-[0.25em] text-foreground mt-1">SERENO</span>
             <span className="text-[10px] tracking-[0.35em] text-primary uppercase">terapias integrativas</span>
           </Link>
-          <button className="md:hidden absolute right-6 p-2" onClick={() => setOpen(!open)} aria-label="Menu">
+
+          {/* Right: socials + search */}
+          <div className="hidden md:flex items-center justify-end gap-4 text-foreground/70">
+            <a href="#" className="hover:text-primary transition"><Instagram size={18} /></a>
+            <a href="#" className="hover:text-primary transition"><Facebook size={18} /></a>
+            <button aria-label="Buscar" className="hover:text-primary transition"><Search size={18} /></button>
+          </div>
+
+          {/* Mobile menu */}
+          <button className="md:hidden absolute right-6 top-6 p-2" onClick={() => setOpen(!open)} aria-label="Menu">
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
-      {/* Nav strip */}
-      <nav className="banner-strip border-y border-primary/20 hidden md:block">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-center gap-12 py-4">
+      {/* Nav strip — peach */}
+      <nav className="banner-strip hidden md:block">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-center gap-14 py-4">
           {nav.map((n) => (
             <Link
               key={n.to}
               to={n.to}
-              className={`text-sm uppercase tracking-[0.15em] transition-colors hover:text-primary ${loc.pathname === n.to ? "text-primary font-medium" : "text-foreground/80"}`}
+              className={`text-sm uppercase tracking-[0.2em] transition-colors hover:text-primary ${loc.pathname === n.to ? "text-primary font-semibold" : "text-foreground/85"}`}
             >
               {n.label}
             </Link>
@@ -62,9 +81,9 @@ export function Layout() {
       </nav>
 
       {open && (
-        <nav className="md:hidden border-t border-border/50 px-6 py-4 flex flex-col gap-3 banner-strip">
+        <nav className="md:hidden px-6 py-4 flex flex-col gap-3 banner-strip">
           {nav.map((n) => (
-            <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="text-sm uppercase tracking-[0.15em] text-foreground">
+            <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="text-sm uppercase tracking-[0.2em] text-foreground">
               {n.label}
             </Link>
           ))}
@@ -98,9 +117,9 @@ export function Layout() {
           <div>
             <h4 className="font-serif text-lg mb-4 text-accent">Contato</h4>
             <ul className="space-y-2 text-sm text-background/70">
-              <li className="flex items-center gap-2"><Phone size={14} /> (11) 99999-0000</li>
-              <li className="flex items-center gap-2"><Mail size={14} /> contato@sereno.com</li>
-              <li className="flex items-start gap-2"><MapPin size={14} className="mt-0.5" /> Rua das Acácias, 123</li>
+              <li className="flex items-center gap-2"><Phone size={14} /><span>(11) 99999-0000</span></li>
+              <li className="flex items-center gap-2"><Mail size={14} /><span>contato@sereno.com</span></li>
+              <li className="flex items-start gap-2"><MapPin size={14} className="mt-0.5" /><span>Rua das Acácias, 123</span></li>
             </ul>
           </div>
           <div>
