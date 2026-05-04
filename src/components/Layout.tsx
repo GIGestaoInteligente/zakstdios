@@ -66,7 +66,7 @@ export function Layout() {
       </div>
 
       {/* Nav strip — peach */}
-      <nav className="banner-strip hidden md:block">
+      <nav className="banner-strip hidden md:block sticky top-0 z-50 shadow-md backdrop-blur-md bg-[oklch(0.88_0.07_55_/_0.92)]">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-center gap-14 py-4">
           {nav.map((n) => (
             <Link
