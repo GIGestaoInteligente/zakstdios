@@ -13,7 +13,11 @@ import { Route as VlogRouteImport } from './routes/vlog'
 import { Route as EspecialidadesRouteImport } from './routes/especialidades'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminVlogRouteImport } from './routes/admin.vlog'
+import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 
 const VlogRoute = VlogRouteImport.update({
   id: '/vlog',
@@ -35,44 +39,106 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminVlogRoute = AdminVlogRouteImport.update({
+  id: '/vlog',
+  path: '/vlog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
   '/contato': typeof ContatoRoute
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/vlog': typeof AdminVlogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
   '/contato': typeof ContatoRoute
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/vlog': typeof AdminVlogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
   '/contato': typeof ContatoRoute
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/vlog': typeof AdminVlogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog' | '/contato' | '/especialidades' | '/vlog'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/blog'
+    | '/contato'
+    | '/especialidades'
+    | '/vlog'
+    | '/admin/blog'
+    | '/admin/vlog'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blog' | '/contato' | '/especialidades' | '/vlog'
-  id: '__root__' | '/' | '/blog' | '/contato' | '/especialidades' | '/vlog'
+  to:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/blog'
+    | '/contato'
+    | '/especialidades'
+    | '/vlog'
+    | '/admin/blog'
+    | '/admin/vlog'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/blog'
+    | '/contato'
+    | '/especialidades'
+    | '/vlog'
+    | '/admin/blog'
+    | '/admin/vlog'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRoute
   ContatoRoute: typeof ContatoRoute
   EspecialidadesRoute: typeof EspecialidadesRoute
@@ -109,6 +175,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -116,11 +196,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/vlog': {
+      id: '/admin/vlog'
+      path: '/vlog'
+      fullPath: '/admin/vlog'
+      preLoaderRoute: typeof AdminVlogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminBlogRoute: typeof AdminBlogRoute
+  AdminVlogRoute: typeof AdminVlogRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminBlogRoute: AdminBlogRoute,
+  AdminVlogRoute: AdminVlogRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AuthRoute: AuthRoute,
   BlogRoute: BlogRoute,
   ContatoRoute: ContatoRoute,
   EspecialidadesRoute: EspecialidadesRoute,
@@ -129,12 +237,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
