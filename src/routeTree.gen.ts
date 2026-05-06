@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminVlogRouteImport } from './routes/admin.vlog'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 
 const VlogRoute = VlogRouteImport.update({
@@ -59,6 +60,11 @@ const AdminVlogRoute = AdminVlogRouteImport.update({
   path: '/vlog',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBlogRoute = AdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
   '/admin/blog': typeof AdminBlogRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/admin/vlog': typeof AdminVlogRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
   '/admin/blog': typeof AdminBlogRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/admin/vlog': typeof AdminVlogRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
   '/admin/blog': typeof AdminBlogRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/admin/vlog': typeof AdminVlogRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/especialidades'
     | '/vlog'
     | '/admin/blog'
+    | '/admin/usuarios'
     | '/admin/vlog'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/especialidades'
     | '/vlog'
     | '/admin/blog'
+    | '/admin/usuarios'
     | '/admin/vlog'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/especialidades'
     | '/vlog'
     | '/admin/blog'
+    | '/admin/usuarios'
     | '/admin/vlog'
   fileRoutesById: FileRoutesById
 }
@@ -203,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminVlogRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/blog': {
       id: '/admin/blog'
       path: '/blog'
@@ -215,11 +234,13 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminBlogRoute: typeof AdminBlogRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
   AdminVlogRoute: typeof AdminVlogRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
   AdminVlogRoute: AdminVlogRoute,
 }
 
