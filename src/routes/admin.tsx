@@ -28,10 +28,10 @@ const menu = [
   { to: "/admin", label: "Início", icon: LayoutDashboard, exact: true, enabled: true },
   { to: "/admin/blog", label: "Blog", icon: FileText, enabled: true },
   { to: "/admin/vlog", label: "Vlog", icon: Video, enabled: true },
+  { to: "/admin/usuarios", label: "Usuários", icon: Users, enabled: true },
 ];
 
 const futureMenu = [
-  { label: "Usuários", icon: Users },
   { label: "Configurações", icon: Settings },
 ];
 
