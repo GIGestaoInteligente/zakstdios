@@ -1,7 +1,14 @@
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Scripts, Outlet, useLocation } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { Layout } from "../components/Layout";
+
+function RootComponent() {
+  const loc = useLocation();
+  const isAdmin = loc.pathname === "/admin" || loc.pathname.startsWith("/admin/") || loc.pathname === "/auth";
+  if (isAdmin) return <Outlet />;
+  return <Layout />;
+}
 
 function NotFoundComponent() {
   return (
@@ -36,7 +43,7 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootShell,
-  component: Layout,
+  component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
 
