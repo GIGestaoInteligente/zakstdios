@@ -11,11 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VlogRouteImport } from './routes/vlog'
 import { Route as EspecialidadesRouteImport } from './routes/especialidades'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardVlogRouteImport } from './routes/dashboard.vlog'
+import { Route as DashboardUsuariosRouteImport } from './routes/dashboard.usuarios'
+import { Route as DashboardBlogRouteImport } from './routes/dashboard.blog'
 import { Route as AdminVlogRouteImport } from './routes/admin.vlog'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
@@ -28,6 +32,11 @@ const VlogRoute = VlogRouteImport.update({
 const EspecialidadesRoute = EspecialidadesRouteImport.update({
   id: '/especialidades',
   path: '/especialidades',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -55,6 +64,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardVlogRoute = DashboardVlogRouteImport.update({
+  id: '/vlog',
+  path: '/vlog',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardUsuariosRoute = DashboardUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBlogRoute = DashboardBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const AdminVlogRoute = AdminVlogRouteImport.update({
   id: '/vlog',
   path: '/vlog',
@@ -77,11 +101,15 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
   '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
   '/admin/blog': typeof AdminBlogRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/admin/vlog': typeof AdminVlogRoute
+  '/dashboard/blog': typeof DashboardBlogRoute
+  '/dashboard/usuarios': typeof DashboardUsuariosRoute
+  '/dashboard/vlog': typeof DashboardVlogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -89,11 +117,15 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
   '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
   '/admin/blog': typeof AdminBlogRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/admin/vlog': typeof AdminVlogRoute
+  '/dashboard/blog': typeof DashboardBlogRoute
+  '/dashboard/usuarios': typeof DashboardUsuariosRoute
+  '/dashboard/vlog': typeof DashboardVlogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -102,11 +134,15 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRoute
   '/contato': typeof ContatoRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/especialidades': typeof EspecialidadesRoute
   '/vlog': typeof VlogRoute
   '/admin/blog': typeof AdminBlogRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/admin/vlog': typeof AdminVlogRoute
+  '/dashboard/blog': typeof DashboardBlogRoute
+  '/dashboard/usuarios': typeof DashboardUsuariosRoute
+  '/dashboard/vlog': typeof DashboardVlogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -116,11 +152,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/contato'
+    | '/dashboard'
     | '/especialidades'
     | '/vlog'
     | '/admin/blog'
     | '/admin/usuarios'
     | '/admin/vlog'
+    | '/dashboard/blog'
+    | '/dashboard/usuarios'
+    | '/dashboard/vlog'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,11 +168,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/contato'
+    | '/dashboard'
     | '/especialidades'
     | '/vlog'
     | '/admin/blog'
     | '/admin/usuarios'
     | '/admin/vlog'
+    | '/dashboard/blog'
+    | '/dashboard/usuarios'
+    | '/dashboard/vlog'
   id:
     | '__root__'
     | '/'
@@ -140,11 +184,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/contato'
+    | '/dashboard'
     | '/especialidades'
     | '/vlog'
     | '/admin/blog'
     | '/admin/usuarios'
     | '/admin/vlog'
+    | '/dashboard/blog'
+    | '/dashboard/usuarios'
+    | '/dashboard/vlog'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -153,6 +201,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRoute
   ContatoRoute: typeof ContatoRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   EspecialidadesRoute: typeof EspecialidadesRoute
   VlogRoute: typeof VlogRoute
 }
@@ -171,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/especialidades'
       fullPath: '/especialidades'
       preLoaderRoute: typeof EspecialidadesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -207,6 +263,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/vlog': {
+      id: '/dashboard/vlog'
+      path: '/vlog'
+      fullPath: '/dashboard/vlog'
+      preLoaderRoute: typeof DashboardVlogRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/usuarios': {
+      id: '/dashboard/usuarios'
+      path: '/usuarios'
+      fullPath: '/dashboard/usuarios'
+      preLoaderRoute: typeof DashboardUsuariosRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/blog': {
+      id: '/dashboard/blog'
+      path: '/blog'
+      fullPath: '/dashboard/blog'
+      preLoaderRoute: typeof DashboardBlogRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/admin/vlog': {
       id: '/admin/vlog'
@@ -246,15 +323,41 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface DashboardRouteChildren {
+  DashboardBlogRoute: typeof DashboardBlogRoute
+  DashboardUsuariosRoute: typeof DashboardUsuariosRoute
+  DashboardVlogRoute: typeof DashboardVlogRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardBlogRoute: DashboardBlogRoute,
+  DashboardUsuariosRoute: DashboardUsuariosRoute,
+  DashboardVlogRoute: DashboardVlogRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
   BlogRoute: BlogRoute,
   ContatoRoute: ContatoRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   EspecialidadesRoute: EspecialidadesRoute,
   VlogRoute: VlogRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

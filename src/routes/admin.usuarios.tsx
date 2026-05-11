@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,10 +20,10 @@ import {
   createUser,
   setUserAdmin,
   deleteUser,
-} from "@/server/users.functions";
+} from "@/utils/users.functions";
 
 export const Route = createFileRoute("/admin/usuarios")({
-  head: () => ({ meta: [{ title: "Usuários · Admin" }] }),
+  head: () => ({ meta: [{ title: "Usuarios · Admin" }] }),
   component: UsersPage,
 });
 
@@ -36,13 +37,28 @@ function UsersPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [creating, setCreating] = useState(false);
 
+  const getAuthHeaders = async () => {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+
+    const token = data.session?.access_token;
+    if (!token) {
+      throw new Error("Sessao expirada. Faca login novamente.");
+    }
+
+    return {
+      authorization: `Bearer ${token}`,
+    };
+  };
+
   const refresh = async () => {
     try {
       setLoading(true);
-      const data = await listUsers();
+      const headers = await getAuthHeaders();
+      const data = await listUsers({ headers });
       setUsers(data);
     } catch (e: any) {
-      toast.error(e.message ?? "Erro ao carregar usuários");
+      toast.error(e.message ?? "Erro ao carregar usuarios");
     } finally {
       setLoading(false);
     }
@@ -55,19 +71,21 @@ function UsersPage() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || password.length < 6) {
-      toast.error("Informe e-mail válido e senha com pelo menos 6 caracteres.");
+      toast.error("Informe e-mail valido e senha com pelo menos 6 caracteres.");
       return;
     }
+
     setCreating(true);
     try {
-      await createUser({ data: { email, password, isAdmin } });
-      toast.success("Usuário criado com sucesso");
+      const headers = await getAuthHeaders();
+      await createUser({ data: { email, password, isAdmin }, headers });
+      toast.success("Usuario criado com sucesso");
       setEmail("");
       setPassword("");
       setIsAdmin(false);
       refresh();
     } catch (err: any) {
-      toast.error(err.message ?? "Erro ao criar usuário");
+      toast.error(err.message ?? "Erro ao criar usuario");
     } finally {
       setCreating(false);
     }
@@ -75,8 +93,13 @@ function UsersPage() {
 
   const toggleAdmin = async (u: UserRow) => {
     const isCurrentlyAdmin = u.roles.includes("admin");
+
     try {
-      await setUserAdmin({ data: { userId: u.id, isAdmin: !isCurrentlyAdmin } });
+      const headers = await getAuthHeaders();
+      await setUserAdmin({
+        data: { userId: u.id, isAdmin: !isCurrentlyAdmin },
+        headers,
+      });
       toast.success(isCurrentlyAdmin ? "Admin removido" : "Admin concedido");
       refresh();
     } catch (err: any) {
@@ -85,10 +108,12 @@ function UsersPage() {
   };
 
   const handleDelete = async (u: UserRow) => {
-    if (!confirm(`Excluir o usuário ${u.email}? Esta ação é irreversível.`)) return;
+    if (!confirm(`Excluir o usuario ${u.email}? Esta acao e irreversivel.`)) return;
+
     try {
-      await deleteUser({ data: { userId: u.id } });
-      toast.success("Usuário excluído");
+      const headers = await getAuthHeaders();
+      await deleteUser({ data: { userId: u.id }, headers });
+      toast.success("Usuario excluido");
       refresh();
     } catch (err: any) {
       toast.error(err.message ?? "Erro ao excluir");
@@ -96,20 +121,24 @@ function UsersPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="max-w-5xl space-y-8">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-primary">Módulo</p>
-        <h2 className="text-2xl font-serif">Usuários</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-primary">Modulo</p>
+        <h2 className="text-2xl font-serif">Usuarios</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Gerencie acessos ao painel administrativo.
         </p>
       </div>
 
-      <section className="border rounded-2xl p-6 bg-card">
-        <h3 className="font-serif text-lg mb-4 flex items-center gap-2">
-          <Plus className="w-4 h-4 text-primary" /> Novo acesso
+      <section className="rounded-2xl border bg-card p-6">
+        <h3 className="mb-4 flex items-center gap-2 font-serif text-lg">
+          <Plus className="h-4 w-4 text-primary" /> Novo acesso
         </h3>
-        <form onSubmit={handleCreate} className="grid gap-4 md:grid-cols-[1fr_1fr_auto_auto] md:items-end">
+
+        <form
+          onSubmit={handleCreate}
+          className="grid gap-4 md:grid-cols-[1fr_1fr_auto_auto] md:items-end"
+        >
           <div className="space-y-1.5">
             <Label htmlFor="email">E-mail</Label>
             <Input
@@ -121,6 +150,7 @@ function UsersPage() {
               required
             />
           </div>
+
           <div className="space-y-1.5">
             <Label htmlFor="password">Senha</Label>
             <Input
@@ -128,63 +158,74 @@ function UsersPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mín. 6 caracteres"
+              placeholder="Min. 6 caracteres"
               minLength={6}
               required
             />
           </div>
+
           <div className="flex items-center gap-2 pb-2">
             <Switch id="isAdmin" checked={isAdmin} onCheckedChange={setIsAdmin} />
-            <Label htmlFor="isAdmin" className="cursor-pointer">Admin</Label>
+            <Label htmlFor="isAdmin" className="cursor-pointer">
+              Admin
+            </Label>
           </div>
+
           <Button type="submit" disabled={creating}>
-            {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Criar"}
+            {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Criar"}
           </Button>
         </form>
       </section>
 
-      <section className="border rounded-2xl bg-card overflow-hidden">
+      <section className="overflow-hidden rounded-2xl border bg-card">
         <div className="p-6 pb-3">
-          <h3 className="font-serif text-lg">Usuários cadastrados</h3>
+          <h3 className="font-serif text-lg">Usuarios cadastrados</h3>
         </div>
+
         {loading ? (
-          <div className="p-10 text-center text-muted-foreground text-sm">Carregando...</div>
+          <div className="p-10 text-center text-sm text-muted-foreground">Carregando...</div>
         ) : users.length === 0 ? (
-          <div className="p-10 text-center text-muted-foreground text-sm">Nenhum usuário.</div>
+          <div className="p-10 text-center text-sm text-muted-foreground">
+            Nenhum usuario.
+          </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>E-mail</TableHead>
-                <TableHead>Função</TableHead>
-                <TableHead>Último acesso</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead>Funcao</TableHead>
+                <TableHead>Ultimo acesso</TableHead>
+                <TableHead className="text-right">Acoes</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {users.map((u) => {
                 const isUserAdmin = u.roles.includes("admin");
+
                 return (
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">{u.email}</TableCell>
                     <TableCell>
                       <span
                         className={
-                          "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs " +
+                          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs " +
                           (isUserAdmin
                             ? "bg-primary/10 text-primary"
                             : "bg-muted text-muted-foreground")
                         }
                       >
-                        {isUserAdmin ? "Admin" : "Usuário"}
+                        {isUserAdmin ? "Admin" : "Usuario"}
                       </span>
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-xs">
+
+                    <TableCell className="text-xs text-muted-foreground">
                       {u.last_sign_in_at
                         ? new Date(u.last_sign_in_at).toLocaleString("pt-BR")
-                        : "—"}
+                        : "-"}
                     </TableCell>
-                    <TableCell className="text-right space-x-1">
+
+                    <TableCell className="space-x-1 text-right">
                       <Button
                         size="sm"
                         variant="outline"
@@ -192,18 +233,19 @@ function UsersPage() {
                         title={isUserAdmin ? "Remover admin" : "Tornar admin"}
                       >
                         {isUserAdmin ? (
-                          <ShieldOff className="w-4 h-4" />
+                          <ShieldOff className="h-4 w-4" />
                         ) : (
-                          <Shield className="w-4 h-4" />
+                          <Shield className="h-4 w-4" />
                         )}
                       </Button>
+
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleDelete(u)}
                         title="Excluir"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
                   </TableRow>

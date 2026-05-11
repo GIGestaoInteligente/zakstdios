@@ -5,7 +5,12 @@ import { Layout } from "../components/Layout";
 
 function RootComponent() {
   const loc = useLocation();
-  const isAdmin = loc.pathname === "/admin" || loc.pathname.startsWith("/admin/") || loc.pathname === "/auth";
+  const isAdmin =
+    loc.pathname === "/admin" ||
+    loc.pathname.startsWith("/admin/") ||
+    loc.pathname === "/dashboard" ||
+    loc.pathname.startsWith("/dashboard/") ||
+    loc.pathname === "/auth";
   if (isAdmin) return <Outlet />;
   return <Layout />;
 }

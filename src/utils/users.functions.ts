@@ -1,15 +1,39 @@
+import { createClient } from "@supabase/supabase-js";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import type { Database } from "@/integrations/supabase/types";
+
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    const missing = [
+      ...(!supabaseUrl ? ["SUPABASE_URL"] : []),
+      ...(!supabaseServiceRoleKey ? ["SUPABASE_SERVICE_ROLE_KEY"] : []),
+    ];
+    throw new Error(`Missing Supabase environment variable(s): ${missing.join(", ")}.`);
+  }
+
+  return createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      storage: undefined,
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
 
 async function assertAdmin(userId: string) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
     .eq("role", "admin")
     .maybeSingle();
+
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Acesso negado");
 }
@@ -17,6 +41,7 @@ async function assertAdmin(userId: string) {
 export const listUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const supabaseAdmin = getSupabaseAdmin();
     await assertAdmin(context.userId);
 
     const { data: usersData, error: usersErr } =
@@ -56,6 +81,7 @@ export const createUser = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ context, data }) => {
+    const supabaseAdmin = getSupabaseAdmin();
     await assertAdmin(context.userId);
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -67,9 +93,10 @@ export const createUser = createServerFn({ method: "POST" })
     const newUserId = created.user!.id;
 
     if (data.isAdmin) {
-      await supabaseAdmin
+      const { error: roleError } = await supabaseAdmin
         .from("user_roles")
         .upsert({ user_id: newUserId, role: "admin" }, { onConflict: "user_id,role" });
+      if (roleError) throw new Error(roleError.message);
     }
 
     return { id: newUserId, email: data.email };
@@ -81,6 +108,7 @@ export const setUserAdmin = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid(), isAdmin: z.boolean() }).parse(data),
   )
   .handler(async ({ context, data }) => {
+    const supabaseAdmin = getSupabaseAdmin();
     await assertAdmin(context.userId);
 
     if (data.isAdmin) {
@@ -93,8 +121,9 @@ export const setUserAdmin = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
     } else {
       if (data.userId === context.userId) {
-        throw new Error("Você não pode remover seu próprio acesso admin.");
+        throw new Error("Voce nao pode remover seu proprio acesso admin.");
       }
+
       const { error } = await supabaseAdmin
         .from("user_roles")
         .delete()
@@ -102,6 +131,7 @@ export const setUserAdmin = createServerFn({ method: "POST" })
         .eq("role", "admin");
       if (error) throw new Error(error.message);
     }
+
     return { ok: true };
   });
 
@@ -109,11 +139,15 @@ export const deleteUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ userId: z.string().uuid() }).parse(data))
   .handler(async ({ context, data }) => {
+    const supabaseAdmin = getSupabaseAdmin();
     await assertAdmin(context.userId);
+
     if (data.userId === context.userId) {
-      throw new Error("Você não pode excluir a si mesmo.");
+      throw new Error("Voce nao pode excluir a si mesmo.");
     }
+
     const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
     if (error) throw new Error(error.message);
+
     return { ok: true };
   });
