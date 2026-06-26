@@ -1,7 +1,7 @@
-import { createRootRoute, HeadContent, Scripts, Outlet, useLocation } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts, useLocation } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import appCss from "../styles.css?url";
 import { Layout } from "../components/Layout";
+import appCss from "../styles.css?url";
 
 function RootComponent() {
   const loc = useLocation();
@@ -23,7 +23,7 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-serif text-foreground">Página não encontrada</h2>
         <p className="mt-2 text-sm text-muted-foreground">A página que procura não existe.</p>
         <div className="mt-6">
-          <Link to="/" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <Link to="/" className="btn-approach inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
             Voltar ao início
           </Link>
         </div>
@@ -37,14 +37,25 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sereno · Yoga, Botas Biomecânicas e Massagem" },
-      { name: "description", content: "Espaço de terapias integrativas: yoga, terapia de contraste, botas biomecânicas e massagem terapêutica." },
-      { property: "og:title", content: "Sereno · Yoga, Botas Biomecânicas e Massagem" },
-      { name: "twitter:title", content: "Sereno · Yoga, Botas Biomecânicas e Massagem" },
-      { property: "og:description", content: "Espaço de terapias integrativas: yoga, terapia de contraste, botas biomecânicas e massagem terapêutica." },
-      { name: "twitter:description", content: "Espaço de terapias integrativas: yoga, terapia de contraste, botas biomecânicas e massagem terapêutica." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8e2df504-8fb2-44af-8a2b-adb7bd3c1cf2/id-preview-61f260f0--5846c4f5-4658-4f0e-9fc0-e7ab05fb0f83.lovable.app-1778069466088.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8e2df504-8fb2-44af-8a2b-adb7bd3c1cf2/id-preview-61f260f0--5846c4f5-4658-4f0e-9fc0-e7ab05fb0f83.lovable.app-1778069466088.png" },
+      { title: "Mana House · Recovery & Social Home Club em Ipanema, Rio de Janeiro" },
+      {
+        name: "description",
+        content:
+          "Sauna infravermelha, terapia de contraste, massagem terapêutica e hot yoga em Ipanema. A Mana House é o primeiro social home club do Rio.",
+      },
+      { property: "og:title", content: "Mana House · Recovery & Social Home Club em Ipanema" },
+      { name: "twitter:title", content: "Mana House · Recovery & Social Home Club em Ipanema" },
+      {
+        property: "og:description",
+        content:
+          "Sauna infravermelha, terapia de contraste, massagem terapêutica e hot yoga em Ipanema, Rio de Janeiro.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Sauna infravermelha, terapia de contraste, massagem terapêutica e hot yoga em Ipanema, Rio de Janeiro.",
+      },
+      { name: "keywords", content: "sauna Rio de Janeiro, banho de gelo Rio, terapia de contraste Ipanema, massagem terapêutica Rio de Janeiro, recovery club Ipanema, hot yoga infravermelho Rio, wellness Ipanema" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],

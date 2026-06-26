@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useLocation } from "@tansta
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/mana-house-logo.svg";
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +21,7 @@ import {
 import { LayoutDashboard, FileText, Video, LogOut, Settings, Users } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin · Sereno" }] }),
+  head: () => ({ meta: [{ title: "Admin · Maná House" }] }),
   component: AdminLayout,
 });
 
@@ -119,11 +120,9 @@ function AdminSidebar({ email, onLogout }: { email: string; onLogout: () => void
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b">
         <div className="flex items-center gap-2 px-2 py-2">
-          <div className="w-8 h-8 rounded-full gradient-sage flex items-center justify-center shrink-0">
-            <span className="font-serif text-base text-primary-foreground">S</span>
-          </div>
+          <img src={logo} alt="Maná House" className="h-9 w-9 shrink-0 rounded-full border border-primary/20 object-cover" />
           <div className="group-data-[collapsible=icon]:hidden">
-            <p className="font-serif text-sm tracking-[0.2em] leading-none">SERENO</p>
+            <p className="font-serif text-sm tracking-[0.12em] leading-none">MANÁ HOUSE</p>
             <p className="text-[10px] text-muted-foreground mt-1">Admin</p>
           </div>
         </div>

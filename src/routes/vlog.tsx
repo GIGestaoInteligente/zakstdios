@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { vlogs as fallback } from "../data/content";
+import { siteCopy, t, vlogs as fallback } from "../data/content";
+import { useLocale } from "../hooks/use-locale";
 
 export const Route = createFileRoute("/vlog")({
   head: () => ({
     meta: [
-      { title: "Vlog · Sereno" },
-      { name: "description", content: "Vídeos sobre nossas terapias, sequências de yoga e bastidores do espaço." },
+      { title: "Vídeos · Mana House" },
+      { name: "description", content: "Vídeos sobre terapia de contraste, hot yoga, sauna infravermelha e bastidores da Mana House." },
     ],
   }),
   component: Page,
@@ -26,12 +27,15 @@ function getEmbed(url: string): string | null {
     if (u.hostname === "youtu.be") return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
     if (u.hostname.includes("vimeo.com")) return `https://player.vimeo.com/video/${u.pathname.replace("/", "")}`;
     return null;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 function Page() {
   const [items, setItems] = useState<{ slug: string; title: string; desc: string; duration: string; embed: string | null }[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const locale = useLocale();
 
   useEffect(() => {
     supabase
@@ -58,13 +62,15 @@ function Page() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-      <p className="text-sm uppercase tracking-[0.2em] text-primary mb-3">Vlog</p>
-      <h1 className="text-4xl md:text-5xl mb-4">Em movimento</h1>
+      <p className="text-sm uppercase tracking-[0.2em] text-primary mb-3">{t(siteCopy.nav.vlog, locale)}</p>
+      <h1 className="text-4xl md:text-5xl mb-4">{locale === "pt" ? "A casa em movimento" : "The house in motion"}</h1>
       <p className="text-lg text-muted-foreground mb-14 max-w-2xl">
-        Vídeos curtos para você praticar, aprender e conhecer o nosso universo.
+        {locale === "pt"
+          ? "Vídeos curtos para conhecer os serviços, os protocolos e o ritmo da Mana House."
+          : "Short videos to discover the services, protocols and rhythm of Mana House."}
       </p>
       {!loaded ? (
-        <p className="text-muted-foreground">Carregando...</p>
+        <p className="text-muted-foreground">{locale === "pt" ? "Carregando..." : "Loading..."}</p>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((v) => (
@@ -73,7 +79,7 @@ function Page() {
                 {v.embed ? (
                   <iframe className="absolute inset-0 w-full h-full" src={v.embed} title={v.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-background/90 flex items-center justify-center group-hover:scale-110 transition shadow-xl">
+                  <div className="w-16 h-16 rounded-full bg-background/90 flex items-center justify-center group-hover:scale-110 transition shadow-xl" aria-label={v.title}>
                     <Play size={22} className="text-primary translate-x-0.5" />
                   </div>
                 )}
