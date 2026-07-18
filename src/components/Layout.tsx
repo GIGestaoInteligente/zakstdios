@@ -1,9 +1,11 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
-import { Facebook, Instagram, Mail, MapPin, Menu, Phone, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import logo from "../assets/mana-house-logo.svg";
+import symbol from "../assets/mana-house-symbol.png";
+import wordmark from "../assets/mana-house-wordmark.png";
 import { siteCopy, t } from "../data/content";
-import { useLocale } from "../hooks/use-locale";
+import { setSiteLocale, useLocale } from "../hooks/use-locale";
 
 const nav = [
   { to: "/" as const, label: siteCopy.nav.home },
@@ -18,136 +20,156 @@ export function Layout() {
   const loc = useLocation();
   const locale = useLocale();
   const logoAlt = "Mana House AMO logo Ipanema Rio de Janeiro";
+  const isHome = loc.pathname === "/";
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="hidden md:block bg-background">
-        <div className="max-w-7xl mx-auto px-8 pt-2 pb-1 flex items-center justify-end text-xs text-foreground/80">
-          <Link to="/admin" className="flex items-center gap-1.5 hover:text-primary">
-            <span className="w-4 h-4 rounded-full bg-secondary flex items-center justify-center text-[9px] text-primary">•</span>
-            {t(siteCopy.account, locale)}
+    <div className="flex min-h-screen flex-col">
+      <header
+        className={`${isHome ? "absolute text-white" : "relative bg-[#f2eadf] text-[#171717]"} left-0 right-0 top-0 z-50`}
+      >
+        <div className="relative mx-auto flex h-20 max-w-[1600px] items-center px-5 md:px-7">
+          <Link to="/" className="shrink-0" aria-label="Mana House - início">
+            <img
+              src={wordmark}
+              alt="Mana House"
+              width={454}
+              height={64}
+              className="h-auto w-[126px] object-contain md:w-[145px]"
+            />
           </Link>
-        </div>
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="border-t border-dashed border-primary/50" />
-        </div>
-      </div>
 
-      <div className="bg-background relative">
-        <div className="max-w-7xl mx-auto px-8 py-5 grid md:grid-cols-3 items-center gap-4">
-          <div className="hidden md:flex items-center gap-3">
-            <span className="w-11 h-11 rounded-full gradient-sage flex items-center justify-center text-primary-foreground shadow">
-              <Phone size={18} />
+          <nav className="ml-10 hidden items-center gap-7 md:flex">
+            {nav.slice(1).map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                className={`text-[9px] uppercase tracking-[0.04em] transition-opacity hover:opacity-55 ${
+                  loc.pathname === n.to ? "underline underline-offset-4" : ""
+                }`}
+              >
+                {t(n.label, locale)}
+              </Link>
+            ))}
+          </nav>
+
+          <Link
+            to="/"
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+            aria-label="Mana House"
+          >
+            <img
+              src={symbol}
+              alt={logoAlt}
+              className={`h-7 w-7 object-contain md:h-8 md:w-8 ${isHome ? "invert" : ""}`}
+            />
+            <span className="mt-1 hidden whitespace-nowrap text-center text-[7px] uppercase leading-[1.15] tracking-[0.04em] md:block">
+              Recovery, ritual and belonging
+              <br />
+              Ipanema · Rio de Janeiro
             </span>
-            <div className="leading-tight">
-              <p className="text-sm text-foreground font-medium">{t(siteCopy.appointment, locale)}</p>
-              <p className="text-base font-serif text-primary">(11) 99999-0000</p>
-            </div>
-          </div>
-
-          <Link to="/" className="flex flex-col items-center justify-center">
-            <img src={logo} alt={logoAlt} width={427} height={427} className="h-24 w-24 object-contain md:h-28 md:w-28" />
-            <span className="sr-only">Mana House</span>
           </Link>
 
-          <div className="hidden md:flex items-center justify-end gap-4 text-foreground/70">
-            <a href="https://www.instagram.com/manahouserio" className="hover:text-primary transition" aria-label="Instagram Mana House Rio">
-              <Instagram size={18} />
-            </a>
-            <a href="https://www.instagram.com/manahouseglobal" className="hover:text-primary transition" aria-label="Instagram Mana House Global">
-              <Facebook size={18} />
-            </a>
-            <button aria-label={locale === "pt" ? "Buscar" : "Search"} className="hover:text-primary transition">
-              <Search size={18} />
+          <div className="ml-auto hidden items-center gap-4 md:flex">
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.05em] transition-opacity hover:opacity-55"
+            >
+              <span aria-hidden>•</span>
+              {t(siteCopy.account, locale)}
+            </Link>
+            <button
+              type="button"
+              onClick={() => setSiteLocale(locale === "pt" ? "en" : "pt")}
+              className="rounded-full border border-current/45 px-2.5 py-1 text-[8px] uppercase tracking-[0.08em] transition-opacity hover:opacity-55"
+              aria-label={
+                locale === "pt" ? "Alterar idioma para inglês" : "Change language to Portuguese"
+              }
+            >
+              {locale === "pt" ? "EN" : "PT"}
             </button>
           </div>
 
-          <button className="md:hidden absolute right-6 top-6 p-2" onClick={() => setOpen(!open)} aria-label="Menu">
+          <button
+            type="button"
+            className="ml-auto p-2 md:hidden"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            aria-label={locale === "pt" ? "Abrir menu" : "Open menu"}
+          >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-      </div>
 
-      <nav className="banner-strip hidden md:block sticky top-0 z-50 shadow-sm backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-center gap-14 py-4">
-          {nav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className={`text-sm uppercase tracking-[0.2em] transition-colors hover:text-black ${
-                loc.pathname === n.to ? "text-secondary font-semibold" : "text-primary-foreground/90"
-              }`}
+        {open && (
+          <nav
+            className={`${isHome ? "bg-black/85 text-white" : "bg-[#f2eadf]"} flex flex-col gap-5 border-t border-current/15 px-5 py-7 md:hidden`}
+          >
+            {nav.map((n) => (
+              <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="text-xl">
+                {t(n.label, locale)}
+              </Link>
+            ))}
+            <Link to="/admin" onClick={() => setOpen(false)} className="mt-3 text-sm opacity-65">
+              {t(siteCopy.account, locale)}
+            </Link>
+            <button
+              type="button"
+              onClick={() => setSiteLocale(locale === "pt" ? "en" : "pt")}
+              className="mt-2 w-fit rounded-full border border-current/45 px-4 py-2 text-sm uppercase tracking-[0.08em]"
             >
-              {t(n.label, locale)}
-            </Link>
-          ))}
-        </div>
-      </nav>
+              {locale === "pt" ? "English" : "Português"}
+            </button>
+          </nav>
+        )}
+      </header>
 
-      {open && (
-        <nav className="md:hidden px-6 py-4 flex flex-col gap-3 banner-strip">
-          {nav.map((n) => (
-            <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="text-sm uppercase tracking-[0.2em] text-primary-foreground">
-              {t(n.label, locale)}
-            </Link>
-          ))}
-        </nav>
-      )}
-
-      <main className="flex-1">
+      <main className="relative z-10 flex-1 bg-[#f2eadf]">
         <Outlet />
       </main>
 
-      <footer className="mt-20 bg-foreground text-background/90">
-        <div className="max-w-6xl mx-auto px-6 py-14 grid md:grid-cols-4 gap-10">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <img src={logo} alt={logoAlt} width={427} height={427} className="h-12 w-12 object-contain" />
-              <span className="font-serif text-xl tracking-[0.12em]">MANA HOUSE</span>
-            </div>
-            <p className="text-sm text-background/70 leading-relaxed">{t(siteCopy.footerIntro, locale)}</p>
-          </div>
-          <div>
-            <h4 className="font-serif text-lg mb-4 text-accent">{t(siteCopy.footerNavigation, locale)}</h4>
-            <ul className="space-y-2 text-sm">
+      <footer className="site-footer sticky bottom-0 z-0 bg-[#bdc9ad] px-5 pb-8 pt-10 text-[#171717] md:px-10 md:pb-10">
+        <div className="mx-auto max-w-7xl">
+          <p className="whitespace-nowrap text-[clamp(4.5rem,13.7vw,13rem)] leading-[0.72] tracking-[-0.085em]">
+            MANA HOUSE
+          </p>
+          <div className="mt-16 grid gap-10 text-xs sm:grid-cols-3 md:ml-auto md:mt-20 md:max-w-2xl">
+            <ul>
               {nav.map((n) => (
                 <li key={n.to}>
-                  <Link to={n.to} className="text-background/70 hover:text-accent transition">
+                  <Link to={n.to} className="hover:underline">
                     {t(n.label, locale)}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
-          <div>
-            <h4 className="font-serif text-lg mb-4 text-accent">{t(siteCopy.footerContact, locale)}</h4>
-            <ul className="space-y-2 text-sm text-background/70">
-              <li className="flex items-center gap-2"><Phone size={14} /><span>(11) 99999-0000</span></li>
-              <li className="flex items-center gap-2"><Mail size={14} /><span>contato@manahouse.com</span></li>
-              <li className="flex items-start gap-2"><MapPin size={14} className="mt-0.5" /><span>Ipanema, Rio de Janeiro</span></li>
+            <ul>
+              <li>(11) 99999-0000</li>
+              <li>
+                <a href="mailto:contato@manahouse.com" className="hover:underline">
+                  contato@manahouse.com
+                </a>
+              </li>
+              <li>Ipanema, Rio de Janeiro</li>
             </ul>
-          </div>
-          <div>
-            <h4 className="font-serif text-lg mb-4 text-accent">{t(siteCopy.footerHours, locale)}</h4>
-            <ul className="space-y-2 text-sm text-background/70">
+            <ul>
               <li>{t(siteCopy.weekdayHours, locale)}</li>
               <li>{t(siteCopy.saturdayHours, locale)}</li>
               <li>{t(siteCopy.sundayHours, locale)}</li>
             </ul>
-            <div className="flex items-center gap-3 mt-5">
-              <a href="https://www.instagram.com/manahouserio" className="btn-approach w-9 h-9 rounded-full border border-background/30 flex items-center justify-center hover:bg-accent hover:text-foreground hover:border-accent transition" aria-label="Instagram Mana House Rio">
-                <Instagram size={15} />
-              </a>
-              <a href="https://www.instagram.com/manahouseglobal" className="btn-approach w-9 h-9 rounded-full border border-background/30 flex items-center justify-center hover:bg-accent hover:text-foreground hover:border-accent transition" aria-label="Instagram Mana House Global">
-                <Facebook size={15} />
-              </a>
-            </div>
           </div>
-        </div>
-        <div className="border-t border-background/10">
-          <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col md:flex-row gap-2 items-center justify-between text-xs text-background/60">
-            <p>© {new Date().getFullYear()} {t(siteCopy.copyright, locale)}</p>
-            <p className="font-serif italic">{t(siteCopy.footerClose, locale)}</p>
+          <div className="mt-28 flex items-end justify-between md:mt-36">
+            <p className="text-xl leading-[0.82] tracking-[-0.04em]">
+              Recover.
+              <br />
+              Ritual.
+              <br />
+              Belonging.
+            </p>
+            <img
+              src={logo}
+              alt={logoAlt}
+              className="h-14 w-14 object-contain grayscale brightness-0"
+            />
           </div>
         </div>
       </footer>

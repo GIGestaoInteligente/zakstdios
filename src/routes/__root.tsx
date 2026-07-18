@@ -23,7 +23,10 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-serif text-foreground">Página não encontrada</h2>
         <p className="mt-2 text-sm text-muted-foreground">A página que procura não existe.</p>
         <div className="mt-6">
-          <Link to="/" className="btn-approach inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <Link
+            to="/"
+            className="btn-approach inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
             Voltar ao início
           </Link>
         </div>
@@ -55,7 +58,11 @@ export const Route = createRootRoute({
         content:
           "Sauna infravermelha, terapia de contraste, massagem terapêutica e hot yoga em Ipanema, Rio de Janeiro.",
       },
-      { name: "keywords", content: "sauna Rio de Janeiro, banho de gelo Rio, terapia de contraste Ipanema, massagem terapêutica Rio de Janeiro, recovery club Ipanema, hot yoga infravermelho Rio, wellness Ipanema" },
+      {
+        name: "keywords",
+        content:
+          "sauna Rio de Janeiro, banho de gelo Rio, terapia de contraste Ipanema, massagem terapêutica Rio de Janeiro, recovery club Ipanema, hot yoga infravermelho Rio, wellness Ipanema",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],
@@ -63,7 +70,10 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500;600&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,300..600&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -74,8 +84,13 @@ export const Route = createRootRoute({
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }

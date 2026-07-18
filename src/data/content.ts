@@ -23,7 +23,10 @@ export const siteCopy = {
   weekdayHours: { pt: "Seg - Sex · 8h às 21h", en: "Mon - Fri · 8am to 9pm" },
   saturdayHours: { pt: "Sábado · 9h às 18h", en: "Saturday · 9am to 6pm" },
   sundayHours: { pt: "Domingo · fechado", en: "Sunday · closed" },
-  copyright: { pt: "Mana House · Ipanema, Rio de Janeiro", en: "Mana House · Ipanema, Rio de Janeiro" },
+  copyright: {
+    pt: "Mana House · Ipanema, Rio de Janeiro",
+    en: "Mana House · Ipanema, Rio de Janeiro",
+  },
   hero: {
     eyebrow: { pt: "Calor. Frio. Gente.", en: "Heat. Cold. People." },
     title: { pt: "Você chegou. Respira.", en: "You've arrived. Breathe." },
@@ -95,25 +98,40 @@ export const siteCopy = {
 
 export const membershipTiers = [
   {
+    id: "essential" as const,
     name: { pt: "Essencial", en: "Essential" },
+    headline: { pt: "Para começar no seu ritmo.", en: "For those ready to begin." },
     body: {
       pt: "Para experimentar. Acesso aos serviços térmicos: sauna e terapia de contraste.",
       en: "For those ready to begin. Access to thermal experiences: sauna and contrast therapy.",
     },
+    price: { pt: "R$ 590 / mês", en: "R$ 590 / month" },
   },
   {
+    id: "ritual" as const,
     name: { pt: "Ritual", en: "Ritual" },
+    headline: {
+      pt: "Para quem faz da recuperação um ritual.",
+      en: "For those who make recovery a ritual.",
+    },
     body: {
       pt: "Para quem incorpora. Acesso completo aos serviços térmicos, hot yoga e prioridade em agendamentos.",
       en: "For those who make it part of life. Full access to thermal experiences, hot yoga and booking priority.",
     },
+    price: { pt: "R$ 850 / mês", en: "R$ 850 / month" },
   },
   {
+    id: "immersion" as const,
     name: { pt: "Imersão", en: "Immersion" },
+    headline: {
+      pt: "Para quem faz disso parte da vida.",
+      en: "For those who make it part of life.",
+    },
     body: {
       pt: "Para quem vai fundo. Acesso total, incluindo massagens e créditos mensais para serviços avulsos.",
       en: "For those who go deeper. Full access, including massages and monthly credits for single experiences.",
     },
+    price: { pt: "R$ 1.100 / mês", en: "R$ 1,100 / month" },
   },
 ];
 
@@ -135,8 +153,20 @@ export const especialidades = [
       en: "The infrared sauna heats from the inside out. Then the cold plunge constricts, reduces inflammation and activates the nervous system. The alternation creates a vascular stimulus that works almost like training: circulation responds, body wakes, mind clears.",
     },
     benefits: {
-      pt: ["Circulação intensa", "Redução de dor muscular", "Anti-inflamatório natural", "Clareza mental", "Modulação do sistema nervoso"],
-      en: ["Intense circulation", "Reduced muscle soreness", "Natural anti-inflammatory support", "Mental clarity", "Nervous system modulation"],
+      pt: [
+        "Circulação intensa",
+        "Redução de dor muscular",
+        "Anti-inflamatório natural",
+        "Clareza mental",
+        "Modulação do sistema nervoso",
+      ],
+      en: [
+        "Intense circulation",
+        "Reduced muscle soreness",
+        "Natural anti-inflammatory support",
+        "Mental clarity",
+        "Nervous system modulation",
+      ],
     },
     imageAlt: {
       pt: "terapia de contraste banho de gelo recuperação Rio",
@@ -160,8 +190,20 @@ export const especialidades = [
       en: "Mana House brings together therapists awarded at international bodywork championships. The menu combines techniques refined over millennia with signature experiences developed through years of recovery research and practice.",
     },
     benefits: {
-      pt: ["Thai Massage Traditional", "Deep Tissue Massage", "Lomi Lani Reset", "Mana Awakening Flow", "Therapeutic Aloha Sabai"],
-      en: ["Thai Massage Traditional", "Deep Tissue Massage", "Lomi Lani Reset", "Mana Awakening Flow", "Therapeutic Aloha Sabai"],
+      pt: [
+        "Thai Massage Traditional",
+        "Deep Tissue Massage",
+        "Lomi Lani Reset",
+        "Mana Awakening Flow",
+        "Therapeutic Aloha Sabai",
+      ],
+      en: [
+        "Thai Massage Traditional",
+        "Deep Tissue Massage",
+        "Lomi Lani Reset",
+        "Mana Awakening Flow",
+        "Therapeutic Aloha Sabai",
+      ],
     },
     imageAlt: {
       pt: "massagem terapêutica premiada Deep Tissue Rio de Janeiro",
@@ -210,8 +252,20 @@ export const especialidades = [
       en: "The experience activates the body's recovery mode across three fronts: sequential compression, vagus nerve stimulation and ILIB therapy. The synergy is what makes it different from any single technology.",
     },
     benefits: {
-      pt: ["Drenagem linfática", "Redução de inchaço", "Desaceleração fisiológica", "Suporte anti-inflamatório", "Recuperação muscular"],
-      en: ["Lymphatic drainage", "Reduced swelling", "Physiological deceleration", "Anti-inflammatory support", "Muscular recovery"],
+      pt: [
+        "Drenagem linfática",
+        "Redução de inchaço",
+        "Desaceleração fisiológica",
+        "Suporte anti-inflamatório",
+        "Recuperação muscular",
+      ],
+      en: [
+        "Lymphatic drainage",
+        "Reduced swelling",
+        "Physiological deceleration",
+        "Anti-inflammatory support",
+        "Muscular recovery",
+      ],
     },
     imageAlt: {
       pt: "recuperação parassimpática nervo vago ILIB Rio",
@@ -235,7 +289,13 @@ export const especialidades = [
       en: "The dry sauna uses intense heat and low humidity for deep sweating. Steam relaxes airways and skin with a more gradual deceleration. The red-light shower closes the experience.",
     },
     benefits: {
-      pt: ["Sudorese profunda", "Relaxamento muscular", "Vias aéreas", "Pele", "Fotobiomodulação leve"],
+      pt: [
+        "Sudorese profunda",
+        "Relaxamento muscular",
+        "Vias aéreas",
+        "Pele",
+        "Fotobiomodulação leve",
+      ],
       en: ["Deep sweating", "Muscular relaxation", "Airways", "Skin", "Gentle photobiomodulation"],
     },
     imageAlt: {
@@ -312,7 +372,8 @@ export const posts = [
   {
     slug: "contraste-recuperacao",
     title: "Por que a terapia de contraste acelera a recuperação",
-    excerpt: "Entenda como calor e frio estimulam circulação, clareza mental e recuperação muscular.",
+    excerpt:
+      "Entenda como calor e frio estimulam circulação, clareza mental e recuperação muscular.",
     date: "28 Mar 2026",
     read: "6 min",
   },
@@ -333,9 +394,24 @@ export const posts = [
 ];
 
 export const vlogs = [
-  { slug: "tour-espaco", title: "Tour pelo espaço Mana House", desc: "Conheça o ambiente onde acontecem nossos atendimentos.", duration: "2:14" },
-  { slug: "contraste", title: "Como funciona uma sessão de contraste", desc: "Acompanhe o circuito de sauna infravermelha e banho de gelo.", duration: "5:48" },
-  { slug: "hot-yoga", title: "Hot yoga infravermelho", desc: "Movimento com calor profundo e presença.", duration: "10:02" },
+  {
+    slug: "tour-espaco",
+    title: "Tour pelo espaço Mana House",
+    desc: "Conheça o ambiente onde acontecem nossos atendimentos.",
+    duration: "2:14",
+  },
+  {
+    slug: "contraste",
+    title: "Como funciona uma sessão de contraste",
+    desc: "Acompanhe o circuito de sauna infravermelha e banho de gelo.",
+    duration: "5:48",
+  },
+  {
+    slug: "hot-yoga",
+    title: "Hot yoga infravermelho",
+    desc: "Movimento com calor profundo e presença.",
+    duration: "10:02",
+  },
 ];
 
 export function t(text: LocalizedText, locale: SiteLocale) {
