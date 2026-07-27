@@ -19,7 +19,7 @@ export const siteCopy = {
     pt: "Recovery & social home club em Ipanema, Rio de Janeiro.",
     en: "Recovery & social home club in Ipanema, Rio de Janeiro.",
   },
-  footerClose: { pt: "A casa te espera.", en: "The House is waiting for you." },
+  footerClose: { pt: "A Casa te espera.", en: "The House is waiting for you." },
   weekdayHours: { pt: "Seg - Sex · 8h às 21h", en: "Mon - Fri · 8am to 9pm" },
   saturdayHours: { pt: "Sábado · 9h às 18h", en: "Saturday · 9am to 6pm" },
   sundayHours: { pt: "Domingo · fechado", en: "Sunday · closed" },
@@ -45,8 +45,8 @@ export const siteCopy = {
     eyebrow: { pt: "Quem somos", en: "About" },
     title: { pt: "A casa", en: "The House" },
     body: {
-      pt: "Mana House é um social home club de recuperação e comunidade em Ipanema. Sauna infravermelha, terapia de contraste, massagem terapêutica e hot yoga reúnem tecnologia de recuperação e toque qualificado em um mesmo espaço.",
-      en: "Mana House is a recovery and community social home club in Ipanema. Infrared sauna, contrast therapy, therapeutic massage and hot yoga bring recovery technology and skilled touch into one space.",
+      pt: "Mana House é um social home club de recuperação e comunidade em Ipanema. Sauna seca e a vapor, terapia de contraste e massagem terapêutica reúnem tecnologia de recuperação e toque qualificado em um mesmo espaço.",
+      en: "Mana House is a recovery and community social home club in Ipanema. Dry and steam sauna, contrast therapy, and therapeutic massage bring recovery technology and skilled touch into one space.",
     },
     body2: {
       pt: "Para quem exige muito do próprio ritmo e sabe que recuperar o corpo é parte do jogo.",

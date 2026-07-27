@@ -1,11 +1,12 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
-import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import logo from "../assets/mana-house-logo.svg";
+import { useEffect, useState } from "react";
+import logoFull from "../assets/mana-house-logo-full.png";
 import symbol from "../assets/mana-house-symbol.png";
 import wordmark from "../assets/mana-house-wordmark.png";
 import { siteCopy, t } from "../data/content";
 import { setSiteLocale, useLocale } from "../hooks/use-locale";
+import { SiteFooter } from "./SiteFooter";
 
 const nav = [
   { to: "/" as const, label: siteCopy.nav.home },
@@ -15,20 +16,51 @@ const nav = [
   { to: "/contato" as const, label: siteCopy.nav.contato },
 ];
 
+const navDesktop = nav.slice(1);
+
 export function Layout() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const loc = useLocation();
   const locale = useLocale();
   const logoAlt = "Mana House AMO logo Ipanema Rio de Janeiro";
   const isHome = loc.pathname === "/";
+  const compact = !isHome || scrolled;
+
+  useEffect(() => {
+    if (!isHome) {
+      setScrolled(true);
+      return;
+    }
+
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+
+  const linkClass = (to: string) =>
+    `site-nav-link text-[9px] uppercase tracking-[0.04em] transition-opacity hover:opacity-55 ${
+      loc.pathname === to ? "underline underline-offset-4" : ""
+    }`;
 
   return (
     <div className="flex min-h-screen flex-col">
       <header
-        className={`${isHome ? "absolute text-white" : "relative bg-[#f2eadf] text-[#171717]"} left-0 right-0 top-0 z-50`}
+        className={`site-header left-0 right-0 top-0 z-50 ${
+          isHome ? "fixed text-white" : "relative bg-[#f2eadf] text-[#171717]"
+        } ${compact ? "site-header--scrolled" : ""} ${
+          isHome && compact ? "site-header--home-scrolled" : ""
+        }`}
       >
-        <div className="relative mx-auto flex h-20 max-w-[1600px] items-center px-5 md:px-7">
-          <Link to="/" className="shrink-0" aria-label="Mana House - início">
+        <div className="site-header-inner relative mx-auto flex h-20 max-w-[1600px] items-center px-5 md:px-7">
+          {/* Wordmark lateral — some ao rolar */}
+          <Link
+            to="/"
+            className={`site-header-wordmark shrink-0 ${compact ? "is-hidden" : ""}`}
+            aria-label="Mana House - início"
+            tabIndex={compact ? -1 : undefined}
+          >
             <img
               src={wordmark}
               alt="Mana House"
@@ -38,38 +70,53 @@ export function Layout() {
             />
           </Link>
 
-          <nav className="ml-10 hidden items-center gap-7 md:flex">
-            {nav.slice(1).map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                className={`text-[9px] uppercase tracking-[0.04em] transition-opacity hover:opacity-55 ${
-                  loc.pathname === n.to ? "underline underline-offset-4" : ""
-                }`}
-              >
+          {/* Menus desktop — ficam à esquerda (também ao rolar) */}
+          <nav
+            className={`site-header-nav site-header-nav--left hidden md:flex ${
+              compact ? "is-compact" : ""
+            }`}
+            aria-label="Principal"
+          >
+            {navDesktop.map((n) => (
+              <Link key={n.to} to={n.to} className={linkClass(n.to)}>
                 {t(n.label, locale)}
               </Link>
             ))}
           </nav>
 
-          <Link
-            to="/"
-            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-            aria-label="Mana House"
-          >
+          {/* Centro: símbolo no topo → logo full ao rolar */}
+          <Link to="/" className="site-header-center" aria-label="Mana House">
             <img
               src={symbol}
-              alt={logoAlt}
-              className={`h-7 w-7 object-contain md:h-8 md:w-8 ${isHome ? "invert" : ""}`}
+              alt=""
+              aria-hidden
+              className={`site-header-symbol object-contain ${isHome ? "invert" : ""} ${
+                compact ? "is-hidden" : ""
+              }`}
             />
-            <span className="mt-1 hidden whitespace-nowrap text-center text-[7px] uppercase leading-[1.15] tracking-[0.04em] md:block">
+            <img
+              src={logoFull}
+              alt={logoAlt}
+              className={`site-header-logo-full object-contain ${isHome ? "" : "brightness-0"} ${
+                compact ? "is-visible" : ""
+              }`}
+            />
+            <span
+              className={`site-header-tagline mt-1 hidden whitespace-nowrap text-center text-[7px] uppercase leading-[1.15] tracking-[0.04em] md:block ${
+                compact ? "is-hidden" : ""
+              }`}
+            >
               Recovery, ritual and belonging
               <br />
               Ipanema · Rio de Janeiro
             </span>
           </Link>
 
-          <div className="ml-auto hidden items-center gap-4 md:flex">
+          <div
+            className={`site-header-actions ml-auto hidden items-center gap-4 md:flex ${
+              compact ? "is-compact" : ""
+            }`}
+          >
             <Link
               to="/admin"
               className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.05em] transition-opacity hover:opacity-55"
@@ -123,56 +170,11 @@ export function Layout() {
         )}
       </header>
 
-      <main className="relative z-10 flex-1 bg-[#f2eadf]">
+      <main className={`relative flex-1 ${isHome ? "" : "bg-[#f2eadf]"}`}>
         <Outlet />
       </main>
 
-      <footer className="site-footer sticky bottom-0 z-0 bg-[#bdc9ad] px-5 pb-8 pt-10 text-[#171717] md:px-10 md:pb-10">
-        <div className="mx-auto max-w-7xl">
-          <p className="whitespace-nowrap text-[clamp(4.5rem,13.7vw,13rem)] leading-[0.72] tracking-[-0.085em]">
-            MANA HOUSE
-          </p>
-          <div className="mt-16 grid gap-10 text-xs sm:grid-cols-3 md:ml-auto md:mt-20 md:max-w-2xl">
-            <ul>
-              {nav.map((n) => (
-                <li key={n.to}>
-                  <Link to={n.to} className="hover:underline">
-                    {t(n.label, locale)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <ul>
-              <li>(11) 99999-0000</li>
-              <li>
-                <a href="mailto:contato@manahouse.com" className="hover:underline">
-                  contato@manahouse.com
-                </a>
-              </li>
-              <li>Ipanema, Rio de Janeiro</li>
-            </ul>
-            <ul>
-              <li>{t(siteCopy.weekdayHours, locale)}</li>
-              <li>{t(siteCopy.saturdayHours, locale)}</li>
-              <li>{t(siteCopy.sundayHours, locale)}</li>
-            </ul>
-          </div>
-          <div className="mt-28 flex items-end justify-between md:mt-36">
-            <p className="text-xl leading-[0.82] tracking-[-0.04em]">
-              Recover.
-              <br />
-              Ritual.
-              <br />
-              Belonging.
-            </p>
-            <img
-              src={logo}
-              alt={logoAlt}
-              className="h-14 w-14 object-contain grayscale brightness-0"
-            />
-          </div>
-        </div>
-      </footer>
+      {!isHome ? <SiteFooter locale={locale} /> : null}
     </div>
   );
 }

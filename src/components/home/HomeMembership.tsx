@@ -1,17 +1,25 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import logo from "../../assets/mana-house-logo.svg";
-import stone from "../../assets/mana-house-pedra-membership.webp";
+import essentialElement from "../../assets/mana-house-elemento-essencial.png";
+import immersionElement from "../../assets/mana-house-elemento-imersao.png";
+import ritualElement from "../../assets/mana-house-elemento-ritual.png";
 import { membershipTiers, t } from "../../data/content";
 import type { SiteLocale } from "../../hooks/use-locale";
+
+const tierElements = {
+  essential: essentialElement,
+  ritual: ritualElement,
+  immersion: immersionElement,
+} as const;
 
 export function HomeMembership({ locale }: { locale: SiteLocale }) {
   const [active, setActive] = useState(2);
   const tier = membershipTiers[active];
+  const element = tierElements[tier.id];
 
   return (
-    <section className="bg-[#dcc5a1] px-5 pb-20 pt-10 text-[#171717] md:px-12 md:pb-28">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-[#dcc5a1] px-5 pb-20 pt-6 text-[#171717] md:px-8 md:pb-28 md:pt-8 lg:px-10">
+      <div className="mx-auto max-w-7xl">
         <div
           className="flex flex-wrap justify-center gap-2 md:gap-5"
           role="tablist"
@@ -33,25 +41,19 @@ export function HomeMembership({ locale }: { locale: SiteLocale }) {
           ))}
         </div>
 
-        <div className="mt-12 grid items-center gap-12 md:mt-16 md:grid-cols-2 md:gap-20">
+        <div className="mt-12 grid items-center gap-10 md:mt-16 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-14 lg:gap-20">
           <div
             key={`${tier.id}-stone`}
-            className="membership-stone relative mx-auto aspect-[4/5] w-full max-w-[310px] overflow-hidden [clip-path:polygon(12%_3%,92%_0,100%_11%,96%_91%,82%_100%,8%_97%,0_80%,2%_15%)]"
+            className="membership-stone relative mx-auto flex aspect-square w-full max-w-[360px] items-center justify-center md:mx-0 md:max-w-[420px]"
           >
-            <img
-              src={stone}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover grayscale"
-            />
-            <div className="absolute inset-0 bg-black/25" />
-            <img
-              src={logo}
-              alt="Símbolo Mana House"
-              className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 object-contain grayscale brightness-150 contrast-50 mix-blend-overlay"
-            />
+            <img src={element} alt="" className="h-full w-full object-contain" />
           </div>
 
-          <div key={tier.id} className="membership-panel max-w-md" role="tabpanel">
+          <div
+            key={tier.id}
+            className="membership-panel max-w-md md:justify-self-start"
+            role="tabpanel"
+          >
             <h3 className="text-balance text-4xl leading-[0.95] md:text-5xl">
               {t(tier.headline, locale)}
             </h3>
@@ -59,7 +61,7 @@ export function HomeMembership({ locale }: { locale: SiteLocale }) {
             <p className="mt-16 text-lg">{t(tier.price, locale)}</p>
             <Link
               to="/contato"
-              className="mt-3 flex w-full items-center justify-center rounded-full bg-[#171717] px-6 py-3 text-xs text-[#f2eadf] transition hover:bg-black/80"
+              className="mt-3 flex w-full max-w-sm items-center justify-center rounded-full bg-[#171717] px-6 py-3 text-xs text-[#f2eadf] transition hover:bg-black/80"
             >
               {locale === "pt" ? "Começar" : "Get started"}
             </Link>

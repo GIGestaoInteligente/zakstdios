@@ -20,7 +20,7 @@ function Page() {
     <div className="max-w-5xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-12">
       <div>
         <p className="text-sm uppercase tracking-[0.2em] text-primary mb-3">{t(siteCopy.footerContact, locale)}</p>
-        <h1 className="text-4xl md:text-5xl mb-4">{locale === "pt" ? "A casa te espera." : "The House is waiting for you."}</h1>
+        <h1 className="home-closer-caption text-4xl md:text-5xl mb-4">{locale === "pt" ? "A Casa te espera." : "The House is waiting for you."}</h1>
         <p className="text-lg text-muted-foreground mb-10">
           {locale === "pt"
             ? "Fale com a Mana House para ser membro, agendar uma sessão avulsa ou conhecer os serviços da casa."

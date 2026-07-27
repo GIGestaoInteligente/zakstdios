@@ -158,6 +158,321 @@
 }
 
 @layer utilities {
+  /* Header animado no scroll */
+  .site-header {
+    transition:
+      background-color 400ms ease,
+      backdrop-filter 400ms ease,
+      height 400ms ease;
+  }
+
+  .site-header--home-scrolled {
+    background-color: rgb(0 0 0 / 55%);
+    backdrop-filter: blur(10px);
+  }
+
+  .site-header-inner {
+    transition: height 400ms ease;
+  }
+
+  .site-header--scrolled .site-header-inner {
+    height: 4.25rem;
+  }
+
+  .site-header-wordmark {
+    position: relative;
+    z-index: 2;
+    transition:
+      opacity 400ms ease,
+      transform 400ms ease,
+      visibility 400ms ease;
+  }
+
+  .site-header-wordmark.is-hidden {
+    position: absolute;
+    left: 1.25rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    pointer-events: none;
+  }
+
+  .site-header-nav {
+    align-items: center;
+    gap: 1.75rem;
+    transition:
+      opacity 400ms ease,
+      transform 400ms ease;
+  }
+
+  .site-header-nav--left {
+    margin-left: 2.5rem;
+  }
+
+  .site-header-nav--left.is-compact {
+    position: absolute;
+    left: 1.25rem;
+    margin-left: 0;
+  }
+
+  .site-header-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, -50%);
+  }
+
+  .site-header-symbol {
+    height: 1.75rem;
+    width: 1.75rem;
+    transition:
+      opacity 350ms ease,
+      transform 350ms ease,
+      visibility 350ms ease;
+  }
+
+  @media (min-width: 768px) {
+    .site-header-symbol {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+
+  .site-header-symbol.is-hidden {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.85);
+    pointer-events: none;
+  }
+
+  .site-header-logo-full {
+    height: auto;
+    width: min(42vw, 13.5rem);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.92);
+    transition:
+      opacity 400ms ease,
+      transform 400ms ease,
+      visibility 400ms ease;
+    pointer-events: none;
+  }
+
+  .site-header-logo-full.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .site-header-tagline {
+    transition:
+      opacity 300ms ease,
+      transform 300ms ease,
+      visibility 300ms ease;
+  }
+
+  .site-header-tagline.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .site-header-actions {
+    position: relative;
+    z-index: 2;
+    transition: transform 400ms ease;
+  }
+
+  .site-header-actions.is-compact {
+    /* Mantém no canto direito */
+  }
+
+  .home-splash-lock,
+  .home-splash-lock body {
+    overflow: hidden !important;
+  }
+
+  .home-banner-rise {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: #1a1a1a;
+    transform: translate3d(0, 100%, 0);
+    transition: transform 5000ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .home-banner-rise.is-up {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero-about-corner {
+    position: absolute;
+    left: 1.15rem;
+    bottom: 1.15rem;
+    z-index: 12;
+    width: min(34vw, 26rem);
+    max-width: calc(100% - 2.3rem);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: clamp(0.84rem, 1.15vw, 1rem);
+    font-weight: 500;
+    line-height: 1.32;
+    letter-spacing: -0.01em;
+    color: rgb(255 255 255 / 94%);
+    text-wrap: pretty;
+  }
+
+  .hero-about-corner p + p {
+    margin-top: 0.95rem;
+  }
+
+  .experience-section {
+    min-height: auto;
+  }
+
+  .experience-intro {
+    max-width: 18rem;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .experience-preview {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+    pointer-events: none;
+    transition:
+      top 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      left 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      right 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      bottom 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .experience-preview .experience-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    max-width: none;
+    width: max-content;
+    text-align: right;
+    line-height: 1.35;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .experience-preview .experience-copy-line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 1024px) {
+    .experience-preview {
+      position: absolute;
+      margin-bottom: 0;
+    }
+
+    /* Posição base: mais afastada da lista, à esquerda */
+    .experience-preview--right {
+      top: 36%;
+      right: calc(100% + 10.5rem);
+      left: auto;
+      transform: none;
+    }
+
+    /* Mais à esquerda (triângulo) */
+    .experience-preview--left {
+      top: 46%;
+      right: calc(100% + 17rem);
+      left: auto;
+      transform: none;
+    }
+
+    /* Mais acima, no meio (triângulo) */
+    .experience-preview--top {
+      top: 6%;
+      right: calc(100% + 13rem);
+      left: auto;
+      transform: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-about-corner {
+      left: 2rem;
+      bottom: 1.75rem;
+      width: min(32vw, 27rem);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-about-corner {
+      left: 1rem;
+      bottom: 1rem;
+      width: min(88vw, 22rem);
+      font-size: 0.82rem;
+    }
+
+    .experience-section {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .experience-intro {
+      max-width: min(88vw, 22rem);
+    }
+
+    .experience-preview {
+      justify-content: flex-start;
+    }
+
+    .experience-preview .experience-copy {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .experience-preview .experience-copy-line {
+      white-space: normal;
+    }
+  }
+
+  .home-banner-content {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 900ms ease;
+  }
+
+  .home-banner-content.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-banner-rise {
+      transition: none;
+      transform: none;
+    }
+
+    .home-banner-content {
+      transition: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
   .gradient-warm {
     background: linear-gradient(135deg, oklch(0.946 0.013 75.4), oklch(0.804 0.054 62.3));
   }
@@ -232,8 +547,122 @@
     transform: translateY(0);
   }
 
+  .home-banner-content .hero-line-solid,
+  .home-banner-content .hero-line-second,
+  .home-banner-content .hero-line-breath::after {
+    animation: none;
+  }
+
+  .home-banner-content.is-visible .hero-line-solid {
+    animation: solidMaterialize 1200ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+  }
+
+  .home-banner-content.is-visible .hero-line-second {
+    animation:
+      breathMaterialize 2200ms cubic-bezier(0.16, 1, 0.3, 1) 280ms both,
+      breathPulse 5.8s ease-in-out 2500ms infinite;
+  }
+
+  .home-banner-content.is-visible .hero-line-breath::after {
+    animation: breathMist 5.5s ease-in-out infinite alternate;
+  }
+
+  .hero-stage {
+    position: absolute;
+    z-index: 2;
+    width: min(calc(100% - 2.5rem), 42rem);
+    opacity: 0;
+    transition:
+      top 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      left 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      bottom 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      right 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 700ms ease;
+    will-change: top, left, bottom, transform, opacity;
+  }
+
+  .hero-stage.is-ready {
+    opacity: 1;
+  }
+
+  .hero-stage.is-centered {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -46%);
+  }
+
+  .hero-stage.is-docked {
+    position: fixed;
+    top: auto;
+    left: 1.25rem;
+    right: auto;
+    bottom: 1.5rem;
+    transform: none;
+    z-index: 40;
+  }
+
+  @media (min-width: 768px) {
+    .hero-stage.is-docked {
+      left: 2.5rem;
+      bottom: 2rem;
+      width: min(42rem, calc(100% - 5rem));
+    }
+  }
+
+  .hero-title {
+    font-size: clamp(2.75rem, 8.2vw, 5.75rem);
+  }
+
+  .hero-stage.is-docked .hero-title {
+    text-align: left;
+  }
+
+  .hero-stage.is-docked .hero-cta-row {
+    justify-content: flex-start;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    min-width: 10.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.2rem;
+    padding: 0.72rem 1.15rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition:
+      background-color 220ms ease,
+      color 220ms ease,
+      border-color 220ms ease,
+      transform 220ms ease;
+  }
+
+  .hero-cta-solid {
+    background: #f2eadf;
+    color: #171717;
+  }
+
+  .hero-cta-solid:hover {
+    background: #ffffff;
+  }
+
+  .hero-cta-ghost {
+    border: 1px solid rgb(255 255 255 / 85%);
+    color: #ffffff;
+  }
+
+  .hero-cta-ghost:hover {
+    background: rgb(255 255 255 / 12%);
+  }
+
   .hero-line {
     will-change: transform, opacity, filter;
+  }
+
+  .hero-line-solid {
+    animation: solidMaterialize 1200ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
   }
 
   .hero-line-breath {
@@ -258,16 +687,21 @@
     will-change: transform, opacity, filter;
   }
 
-  .hero-line-first {
-    animation:
-      breathMaterialize 2200ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both,
-      breathPulse 5.8s ease-in-out 2300ms infinite;
-  }
-
   .hero-line-second {
     animation:
-      breathMaterialize 2200ms cubic-bezier(0.16, 1, 0.3, 1) 420ms both,
-      breathPulse 5.8s ease-in-out 2620ms infinite;
+      breathMaterialize 2200ms cubic-bezier(0.16, 1, 0.3, 1) 280ms both,
+      breathPulse 5.8s ease-in-out 2500ms infinite;
+  }
+
+  @keyframes solidMaterialize {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes breathMaterialize {
@@ -323,24 +757,33 @@
   }
 
   .scroll-reveal.experience-row {
-    transform: translateX(-90px);
+    transform: translateY(28px);
   }
 
   .scroll-reveal.experience-row.is-visible {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   .experience-link {
+    padding-left: 0;
+    font-family:
+      "Sans-TRIAL Medium",
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: normal;
     transition:
       color 350ms ease,
-      padding-left 450ms cubic-bezier(0.22, 1, 0.36, 1),
       opacity 350ms ease;
   }
 
   .experience-link:hover,
   .experience-link:focus-visible,
   .experience-link.is-active {
-    padding-left: 0.75rem;
+    padding-left: 0;
   }
 
   .experience-image {
@@ -382,10 +825,10 @@
 
   @keyframes ambientZoom {
     from {
-      transform: scale(1.02) translate3d(-0.5%, 0, 0);
+      transform: scale(1.06) translate3d(0, 0, 0);
     }
     to {
-      transform: scale(1.09) translate3d(0.8%, -0.6%, 0);
+      transform: scale(1.12) translate3d(0, -0.4%, 0);
     }
   }
 
@@ -433,23 +876,92 @@
     }
   }
 
-  @supports (animation-timeline: view()) {
-    .site-footer > div {
-      animation: footerReveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 55%;
-    }
+  .home-closer-frame {
+    will-change: height;
   }
 
-  @keyframes footerReveal {
-    from {
-      opacity: 0.35;
-      transform: translateY(70px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* "A Casa te espera." — medium sans limpa (mesmo peso/estilo da referência) */
+  @font-face {
+    font-family: "Sans-TRIAL Medium";
+    src:
+      local("Sans-TRIAL Medium"),
+      local("Sans-TRIAL Medium Regular"),
+      local("NaN Druid Sans-TRIAL Medium"),
+      url("/fonts/Sans-TRIAL-Medium.woff2") format("woff2"),
+      url("/fonts/Sans-TRIAL-Medium.woff") format("woff"),
+      url("/fonts/Sans-TRIAL-Medium.ttf") format("truetype"),
+      url("/fonts/Sans-TRIAL-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .home-closer-caption {
+    font-family:
+      "Sans-TRIAL Medium",
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
+    font-weight: 200;
+    font-style: normal;
+    font-variation-settings: normal;
+    letter-spacing: 0.03em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Wordmark tipográfico — mesma forma (O/U entrelaçados), qualidade vetorial */
+  .mana-house-wordmark {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    color: #171717;
+    font-family: "Cormorant Garamond", Didot, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: clamp(2.75rem, 11.5vw, 9.5rem);
+    line-height: 0.85;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  /* Na home closer: um pouco menor para a imagem do chuveiro poder abrir */
+  .mana-house-wordmark--closer {
+    font-size: clamp(1.85rem, 6.5vw, 4.75rem);
+  }
+
+  .mana-house-wordmark__house {
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .mana-house-wordmark__ou {
+    position: relative;
+    display: inline-block;
+    width: 1.35em;
+    height: 1em;
+  }
+
+  .mana-house-wordmark__o,
+  .mana-house-wordmark__u {
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: 1;
+  }
+
+  .mana-house-wordmark__o {
+    z-index: 1;
+    letter-spacing: 0;
+  }
+
+  .mana-house-wordmark__u {
+    left: 0.42em;
+    z-index: 2;
+    letter-spacing: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -457,17 +969,25 @@
     .scroll-reveal.is-visible,
     .hero-line,
     .hero-line::after,
+    .hero-stage,
     .experience-image,
     .experience-copy,
     .ambient-zoom,
     .membership-panel,
     .membership-stone,
-    .wet-glass-drift,
-    .site-footer > div {
+    .wet-glass-drift {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
       transition-duration: 0.01ms !important;
+    }
+
+    .home-closer {
+      height: auto;
+    }
+
+    .home-closer-frame {
+      height: 100svh !important;
     }
   }
 }
