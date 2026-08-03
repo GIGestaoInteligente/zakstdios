@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import breatheMark from "../../assets/mana-house-breathe-wordmark.png";
 import hero from "../../assets/mana-house-hero-recuperacao.webp";
 import symbol from "../../assets/mana-house-symbol.png";
-import titleMark from "../../assets/mana-house-voce-chegou-respira.png";
 import { siteCopy, t } from "../../data/content";
 import type { SiteLocale } from "../../hooks/use-locale";
 
@@ -35,6 +35,9 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
     };
   }, []);
 
+  const arrived = locale === "pt" ? "Você chegou." : "You've arrived.";
+  const breatheAlt = locale === "pt" ? "Respira." : "Breathe.";
+
   return (
     <section className="home-hero relative min-h-[128svh] overflow-hidden text-white">
       <div className="absolute inset-0 z-0 bg-[#1a1a1a]" aria-hidden />
@@ -49,10 +52,10 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
             className="h-14 w-14 object-contain invert md:h-16 md:w-16"
           />
           <span className="mt-1 text-[10px] leading-none text-white/80">®</span>
-          <p className="mt-4 text-[11px] uppercase tracking-[0.22em] text-white md:text-xs">
+          <p className="type-sans-medium mt-4 text-[11px] uppercase tracking-[0.22em] text-white md:text-xs">
             Recovery, ritual and belonging
           </p>
-          <p className="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/75 md:text-[11px]">
+          <p className="type-sans-medium mt-2 text-[10px] uppercase tracking-[0.18em] text-white/75 md:text-[11px]">
             Ipanema · Rio de Janeiro
           </p>
         </div>
@@ -75,16 +78,25 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
 
         <div className="relative z-10 mx-auto flex h-[100svh] max-w-7xl flex-col items-center justify-center px-5 pt-24 md:px-10">
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center text-center">
-            <h1 className="sr-only">{t(siteCopy.hero.title, locale)}</h1>
-            <img
-              src={titleMark}
-              alt={t(siteCopy.hero.title, locale)}
-              width={1100}
-              height={375}
-              className="h-auto w-[min(82vw,34rem)] object-contain"
-            />
+            <h1 className="hero-title-stack">
+              <span className="sr-only">{t(siteCopy.hero.title, locale)}</span>
+              <span aria-hidden className="hero-line hero-line-solid hero-arrived">
+                {arrived}
+              </span>
+              <span aria-hidden className="hero-breathe">
+                <img
+                  src={breatheMark}
+                  alt=""
+                  width={1024}
+                  height={272}
+                  className="hero-breathe-img"
+                  draggable={false}
+                />
+                <span className="sr-only">{breatheAlt}</span>
+              </span>
+            </h1>
 
-            <div className="hero-cta-row mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="hero-cta-row flex flex-wrap items-center justify-center gap-3">
               <Link to="/contato" className="hero-cta hero-cta-solid">
                 {t(siteCopy.hero.primaryCta, locale)}
               </Link>

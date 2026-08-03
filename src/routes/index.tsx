@@ -177,10 +177,10 @@ function Index() {
         <div className="flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="experience-intro relative z-[2] shrink-0">
             <Reveal>
-              <p className="text-xl leading-none tracking-[-0.03em]">
+              <p className="experience-label text-xl leading-none tracking-[-0.03em]">
                 {locale === "pt" ? "A Experiência" : "The Experience"}
               </p>
-              <p className="mt-4 max-w-[16rem] text-sm leading-snug md:max-w-[18rem]">
+              <p className="experience-lede mt-4 max-w-[16rem] text-sm leading-snug md:max-w-[18rem]">
                 {locale === "pt"
                   ? "Nove pilares que definem o ritmo da Mana House — recuperação, conexão e presença em Ipanema."
                   : "Nine pillars that define the rhythm of Mana House — recovery, connection and presence in Ipanema."}
@@ -202,7 +202,7 @@ function Index() {
                     </span>
                   ))}
               </p>
-              <div className="relative aspect-square w-[7.5rem] shrink-0 overflow-hidden sm:w-32 lg:w-36">
+              <div className="relative aspect-square w-[7.5rem] shrink-0 overflow-hidden sm:w-32 lg:w-42">
                 <img
                   src={activeItem.image}
                   alt={t(activeItem.label, locale)}
@@ -239,20 +239,20 @@ function Index() {
             <img
               src={community}
               alt={t(siteCopy.members.alt, locale)}
-              className="absolute inset-0 h-full w-full object-cover object-[50%_18%]"
+              className="absolute inset-0 h-full w-full object-cover object-[50%_18%] brightness-110"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/25 to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-black/5" />
             <div className="relative grid min-h-[360px] gap-8 p-7 md:min-h-[460px] md:grid-cols-[1fr_auto] md:p-12">
               <div className="max-w-xs">
-                <h2 className="text-3xl">{t(siteCopy.members.title, locale)}</h2>
-                <p className="mt-4 text-sm leading-snug">
+                <h2 className="ohana-title text-3xl drop-shadow-sm">{t(siteCopy.members.title, locale)}</h2>
+                <p className="ohana-body mt-4 text-sm leading-snug drop-shadow-sm">
                   {t(siteCopy.members.subtitle, locale)} {t(siteCopy.members.body, locale)}
                 </p>
               </div>
               <Link
                 to="/contato"
-                className="self-start rounded-full border border-white/80 px-7 py-4 text-sm transition hover:bg-white hover:text-black md:self-center"
+                className="ohana-cta self-start rounded-full border border-white/80 px-7 py-4 text-sm transition hover:bg-white hover:text-black md:self-center"
               >
                 {t(siteCopy.members.secondaryCta, locale)}
               </Link>

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import logo from "../assets/mana-house-logo.svg";
-import wordmark from "../assets/mana-house-wordmark-footer.png";
+import symbol from "../assets/mana-house-symbol-footer.png";
+import wordmark from "../assets/mana-house-wordmark-footer.svg";
 import { siteCopy, t } from "../data/content";
 import type { SiteLocale } from "../hooks/use-locale";
 
@@ -83,7 +83,7 @@ export function SiteFooter({
             closer ? "mt-16 md:mt-20" : "mt-20 md:mt-24"
           }`}
         >
-          <p className="text-[1.15rem] leading-[0.92] tracking-[-0.02em] md:text-[1.25rem]">
+          <p className="site-footer-tagline text-[1.15rem] leading-[0.92] tracking-[-0.02em] md:text-[1.25rem]">
             Recover.
             <br />
             Ritual.
@@ -91,9 +91,10 @@ export function SiteFooter({
             Belonging.
           </p>
           <img
-            src={logo}
+            src={symbol}
             alt={logoAlt}
-            className="h-12 w-12 shrink-0 object-contain brightness-0 grayscale md:h-14 md:w-14"
+            className="block h-12 w-12 shrink-0 object-contain md:h-14 md:w-14"
+            draggable={false}
           />
         </div>
       ) : null}

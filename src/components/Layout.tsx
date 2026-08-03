@@ -102,7 +102,7 @@ export function Layout() {
               }`}
             />
             <span
-              className={`site-header-tagline mt-1 hidden whitespace-nowrap text-center text-[7px] uppercase leading-[1.15] tracking-[0.04em] md:block ${
+              className={`site-header-tagline mt-0 hidden whitespace-nowrap text-center text-[8.5px] uppercase leading-[1.35] tracking-[0.25em] md:block ${
                 compact ? "is-hidden" : ""
               }`}
             >

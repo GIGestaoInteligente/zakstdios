@@ -32,7 +32,7 @@ export function HomeMembership({ locale }: { locale: SiteLocale }) {
               role="tab"
               aria-selected={active === index}
               onClick={() => setActive(index)}
-              className={`rounded-full px-4 py-1.5 text-sm transition-colors md:text-base ${
+              className={`membership-tab rounded-full px-4 py-1.5 text-sm transition-colors md:text-base ${
                 active === index ? "bg-[#171717] text-[#dcc5a1]" : "hover:bg-black/5"
               }`}
             >
@@ -54,14 +54,16 @@ export function HomeMembership({ locale }: { locale: SiteLocale }) {
             className="membership-panel max-w-md md:justify-self-start"
             role="tabpanel"
           >
-            <h3 className="text-balance text-4xl leading-[0.95] md:text-5xl">
+            <h3 className="membership-headline text-balance text-4xl leading-[0.95] md:text-5xl">
               {t(tier.headline, locale)}
             </h3>
-            <p className="mt-6 max-w-sm text-base leading-snug">{t(tier.body, locale)}</p>
-            <p className="mt-16 text-lg">{t(tier.price, locale)}</p>
+            <p className="membership-body mt-6 max-w-sm text-base leading-snug">
+              {t(tier.body, locale)}
+            </p>
+            <p className="membership-price mt-16 text-lg">{t(tier.price, locale)}</p>
             <Link
               to="/contato"
-              className="mt-3 flex w-full max-w-sm items-center justify-center rounded-full bg-[#171717] px-6 py-3 text-xs text-[#f2eadf] transition hover:bg-black/80"
+              className="membership-cta mt-3 flex w-full max-w-sm items-center justify-center rounded-full bg-[#171717] px-6 py-3 text-xs text-[#f2eadf] transition hover:bg-black/80"
             >
               {locale === "pt" ? "Começar" : "Get started"}
             </Link>
