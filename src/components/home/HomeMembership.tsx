@@ -41,17 +41,17 @@ export function HomeMembership({ locale }: { locale: SiteLocale }) {
           ))}
         </div>
 
-        <div className="mt-12 grid items-center gap-10 md:mt-16 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-14 lg:gap-20">
+        <div className="mt-12 flex flex-col items-center gap-6 md:mt-16 md:flex-row md:items-center md:justify-center md:gap-8 lg:gap-10">
           <div
             key={`${tier.id}-stone`}
-            className="membership-stone relative mx-auto flex aspect-square w-full max-w-[360px] items-center justify-center md:mx-0 md:max-w-[420px]"
+            className="membership-stone relative flex aspect-square w-full max-w-[320px] shrink-0 items-center justify-center md:max-w-[380px]"
           >
             <img src={element} alt="" className="h-full w-full object-contain" />
           </div>
 
           <div
             key={tier.id}
-            className="membership-panel max-w-md md:justify-self-start"
+            className="membership-panel w-full max-w-md"
             role="tabpanel"
           >
             <h3 className="membership-headline text-balance text-4xl leading-[0.95] md:text-5xl">

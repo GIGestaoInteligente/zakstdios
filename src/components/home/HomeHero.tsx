@@ -1,37 +1,63 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import breatheMark from "../../assets/mana-house-breathe-wordmark.png";
 import hero from "../../assets/mana-house-hero-recuperacao.webp";
 import symbol from "../../assets/mana-house-symbol.png";
 import { siteCopy, t } from "../../data/content";
 import type { SiteLocale } from "../../hooks/use-locale";
+import { markHomeHeroIntroDone } from "./home-hero-intro";
 
-const RISE_MS = 5000;
+const RISE_MS = 1600;
 
 export function HomeHero({ locale }: { locale: SiteLocale }) {
   const [rising, setRising] = useState(false);
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const root = document.documentElement;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let finished = false;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      root.classList.remove("home-splash-lock");
+      root.classList.add("home-hero-ready");
+      markHomeHeroIntroDone();
+    };
+
     if (reduce) {
       setRising(true);
+      finish();
       return;
     }
 
-    document.documentElement.classList.add("home-splash-lock");
+    root.classList.add("home-splash-lock");
+    root.classList.remove("home-hero-ready");
 
-    const start = window.requestAnimationFrame(() => {
-      setRising(true);
+    const banner = bannerRef.current;
+    const onTransitionEnd = (e: TransitionEvent) => {
+      if (e.target !== banner) return;
+      if (e.propertyName !== "transform") return;
+      finish();
+    };
+    banner?.addEventListener("transitionend", onTransitionEnd);
+
+    let frame2 = 0;
+    const frame1 = window.requestAnimationFrame(() => {
+      frame2 = window.requestAnimationFrame(() => {
+        setRising(true);
+      });
     });
 
-    const done = window.setTimeout(() => {
-      document.documentElement.classList.remove("home-splash-lock");
-    }, RISE_MS);
+    // Fallback se transitionend não disparar
+    const fallback = window.setTimeout(finish, RISE_MS + 200);
 
     return () => {
-      window.cancelAnimationFrame(start);
-      window.clearTimeout(done);
-      document.documentElement.classList.remove("home-splash-lock");
+      window.cancelAnimationFrame(frame1);
+      window.cancelAnimationFrame(frame2);
+      window.clearTimeout(fallback);
+      banner?.removeEventListener("transitionend", onTransitionEnd);
     };
   }, []);
 
@@ -39,8 +65,8 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
   const breatheAlt = locale === "pt" ? "Respira." : "Breathe.";
 
   return (
-    <section className="home-hero relative min-h-[128svh] overflow-hidden text-white">
-      <div className="absolute inset-0 z-0 bg-[#1a1a1a]" aria-hidden />
+    <section className="home-hero relative min-h-[128svh] overflow-hidden bg-black text-white">
+      <div className="absolute inset-0 z-0 bg-black" aria-hidden />
 
       <div className="absolute inset-0 z-[1] flex h-[100svh] items-center justify-center">
         <div className="flex flex-col items-center px-6 text-center">
@@ -61,7 +87,7 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
         </div>
       </div>
 
-      <div className={`home-banner-rise ${rising ? "is-up" : ""}`}>
+      <div ref={bannerRef} className={`home-banner-rise ${rising ? "is-up" : ""}`}>
         <img
           src={hero}
           alt={

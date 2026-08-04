@@ -32,7 +32,7 @@ export function HomeJournal({ locale, posts }: { locale: SiteLocale; posts: Jour
 
   return (
     <section className="bg-[#171717] pb-10 pt-20 text-[#f2eadf] md:pb-12 md:pt-24">
-      <div className="mx-auto max-w-7xl px-5 md:px-10">
+      <div className="pl-[1.15rem] pr-[1.15rem] md:pl-8 md:pr-8">
         <Reveal>
           <h2 className="journal-label text-2xl">Journal</h2>
           <p className="journal-lede mt-2 text-sm text-white/70">
@@ -41,7 +41,7 @@ export function HomeJournal({ locale, posts }: { locale: SiteLocale; posts: Jour
         </Reveal>
       </div>
 
-      {/* Full-bleed: canto a canto da viewport */}
+      {/* Carrossel: primeira coluna alinha com menu / títulos */}
       <Carousel
         opts={{
           align: "start",
@@ -52,7 +52,7 @@ export function HomeJournal({ locale, posts }: { locale: SiteLocale; posts: Jour
         plugins={[autoplay]}
         className="journal-carousel mt-10 w-full"
       >
-        <CarouselContent className="ml-0">
+        <CarouselContent className="ml-0 pl-[1.15rem] md:pl-8">
           {slides.map((post, index) => (
             <CarouselItem
               key={`${post.title.en}-${index}`}
@@ -82,7 +82,7 @@ export function HomeJournal({ locale, posts }: { locale: SiteLocale; posts: Jour
         </CarouselContent>
       </Carousel>
 
-      <div className="mx-auto max-w-7xl px-5 md:px-10">
+      <div className="pl-[1.15rem] pr-[1.15rem] md:pl-8 md:pr-8">
         <Link
           to="/blog"
           className="journal-cta mt-10 inline-flex items-center gap-2 rounded-full border border-[#d8bd94] px-6 py-2 text-xs text-[#d8bd94] transition hover:bg-[#d8bd94] hover:text-black"

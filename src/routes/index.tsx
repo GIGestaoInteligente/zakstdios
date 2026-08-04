@@ -173,14 +173,14 @@ function Index() {
     <div className="bg-[#f2eadf] text-[#171717]">
       <HomeHero locale={locale} />
 
-      <section className="experience-section relative bg-[#f2eadf] px-[1.15rem] py-20 md:px-8 md:py-28">
+      <section className="experience-section relative bg-[#f2eadf] py-20 pl-[1.15rem] pr-0 md:py-28 md:pl-8">
         <div className="flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
-          <div className="experience-intro relative z-[2] shrink-0">
+          <div className="experience-intro relative z-[2] shrink-0 pr-4 md:pr-8">
             <Reveal>
               <p className="experience-label text-xl leading-none tracking-[-0.03em]">
                 {locale === "pt" ? "A Experiência" : "The Experience"}
               </p>
-              <p className="experience-lede mt-4 max-w-[16rem] text-sm leading-snug md:max-w-[18rem]">
+              <p className="experience-lede mt-4 max-w-[22rem] text-sm leading-snug md:max-w-[20rem]">
                 {locale === "pt"
                   ? "Nove pilares que definem o ritmo da Mana House — recuperação, conexão e presença em Ipanema."
                   : "Nine pillars that define the rhythm of Mana House — recovery, connection and presence in Ipanema."}
@@ -188,12 +188,13 @@ function Index() {
             </Reveal>
           </div>
 
-          <div className="experience-list relative z-[2] w-full max-w-xl self-end lg:max-w-[32rem] xl:max-w-[36rem]">
+          {/* Largura controlada em styles.css → .experience-list */}
+          <div className="experience-list relative z-[2]">
             <div
               key={`${activeItem.label.en}-${previewSlot}`}
               className={`experience-preview experience-preview--${previewSlot}`}
             >
-              <p className="experience-copy text-[0.8125rem] leading-[1.35] text-[#171717]">
+              <p className="experience-copy text-[0.90rem] leading-[1.35] text-[#171717]">
                 {t(activeItem.desc, locale)
                   .split("\n")
                   .map((line) => (
@@ -202,7 +203,7 @@ function Index() {
                     </span>
                   ))}
               </p>
-              <div className="relative aspect-square w-[7.5rem] shrink-0 overflow-hidden sm:w-32 lg:w-42">
+              <div className="relative aspect-square w-[7.5rem] shrink-0 overflow-hidden sm:w-32 lg:w-40">
                 <img
                   src={activeItem.image}
                   alt={t(activeItem.label, locale)}
@@ -212,7 +213,7 @@ function Index() {
               </div>
             </div>
 
-            <div>
+            <div className="experience-rows">
               {experiences.map((item, index) => (
                 <Reveal key={item.label.en} className="experience-row" delay={index * 75}>
                   <button
@@ -220,7 +221,7 @@ function Index() {
                     onClick={() => setActiveExperience(index)}
                     onMouseEnter={() => setActiveExperience(index)}
                     onFocus={() => setActiveExperience(index)}
-                    className={`experience-link block w-full whitespace-nowrap border-b border-black/30 text-left text-[clamp(1.65rem,2.9vw,2.75rem)] leading-[1.08] tracking-[-0.045em] ${
+                    className={`experience-link block w-full whitespace-nowrap border-b border-black/30 text-left text-[clamp(1.80rem,3.9vw,2.95rem)] leading-[1.08] tracking-[-0.045em] ${
                       activeExperience === index ? "is-active text-black" : "text-[#d8bd94]"
                     }`}
                   >
@@ -233,32 +234,31 @@ function Index() {
         </div>
       </section>
 
-      <section className="-mt-6 bg-[#dcc5a1] px-5 pt-0 md:-mt-10 md:px-10">
-        <Reveal className="mx-auto max-w-7xl">
-          <div className="relative min-h-[360px] overflow-hidden rounded-2xl text-white md:min-h-[460px]">
-            <img
-              src={community}
-              alt={t(siteCopy.members.alt, locale)}
-              className="absolute inset-0 h-full w-full object-cover object-[50%_18%] brightness-110"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-black/5" />
-            <div className="relative grid min-h-[360px] gap-8 p-7 md:min-h-[460px] md:grid-cols-[1fr_auto] md:p-12">
-              <div className="max-w-xs">
-                <h2 className="ohana-title text-3xl drop-shadow-sm">{t(siteCopy.members.title, locale)}</h2>
-                <p className="ohana-body mt-4 text-sm leading-snug drop-shadow-sm">
-                  {t(siteCopy.members.subtitle, locale)} {t(siteCopy.members.body, locale)}
-                </p>
-              </div>
-              <Link
-                to="/contato"
-                className="ohana-cta self-start rounded-full border border-white/80 px-7 py-4 text-sm transition hover:bg-white hover:text-black md:self-center"
-              >
-                {t(siteCopy.members.secondaryCta, locale)}
-              </Link>
+      {/* Ohana full-bleed — imagem canto a canto */}
+      <section className="ohana-section relative z-[1] -mt-6 w-full bg-[#dcc5a1] pt-0 md:-mt-10">
+        <div className="ohana-banner relative min-h-[360px] w-full overflow-hidden text-white md:min-h-[460px]">
+          <img
+            src={community}
+            alt={t(siteCopy.members.alt, locale)}
+            className="absolute inset-0 h-full w-full object-cover object-[50%_18%] brightness-110"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-black/5" />
+          <div className="relative z-[1] grid min-h-[360px] items-center gap-8 px-[1.15rem] py-10 md:min-h-[460px] md:grid-cols-[1fr_auto] md:px-8 md:py-14">
+            <div className="ohana-copy max-w-xs text-left md:max-w-sm">
+              <h2 className="ohana-title text-3xl drop-shadow-sm">{t(siteCopy.members.title, locale)}</h2>
+              <p className="ohana-body mt-4 text-sm leading-snug drop-shadow-sm">
+                {t(siteCopy.members.subtitle, locale)} {t(siteCopy.members.body, locale)}
+              </p>
             </div>
+            <Link
+              to="/contato"
+              className="ohana-cta self-start rounded-full border border-white/80 px-7 py-4 text-sm transition hover:bg-white hover:text-black md:self-center"
+            >
+              {t(siteCopy.members.secondaryCta, locale)}
+            </Link>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       <HomeMembership locale={locale} />

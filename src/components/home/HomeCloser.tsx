@@ -4,14 +4,22 @@ import { siteCopy, t } from "../../data/content";
 import type { SiteLocale } from "../../hooks/use-locale";
 import { SiteFooter } from "../SiteFooter";
 
-/** Faixa inicial do vidro (vh). */
+/** Faixa fechada (vh) — igual à 2ª imagem. */
 const START_VH = 18;
-/** Rolagem só para abrir o vidro (vh). */
-const GLASS_RANGE_VH = 145;
-/** Rolagem depois, para o footer completar (vh). */
-const FOOTER_RANGE_VH = 100;
-/** Quanto do footer fica visível enquanto o vidro abre (px). */
-const FOOTER_PEEK_PX = 500;
+/**
+ * Extra de rolagem (vh) para completar a abertura do vidro depois do trigger.
+ * ↑ maior = abertura mais lenta. ~80–120 = razoável; 40 = mais rápida.
+ */
+const OPEN_RANGE_VH = 160;
+/** Rolagem (vh) só para o footer subir, depois do vidro aberto. */
+const FOOTER_RANGE_VH = 120;
+/** Quanto do footer fica visível sob o vidro (px). */
+const FOOTER_PEEK_PX = 460;
+/**
+ * Faixa sage/footer (px) que deve aparecer sob o vidro
+ * antes da abertura começar — evita o vidro colado na borda inferior.
+ */
+const OPEN_AFTER_FOOTER_PX = 120;
 
 export function HomeCloser({ locale }: { locale: SiteLocale }) {
   const trackRef = useRef<HTMLElement>(null);
@@ -44,28 +52,40 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
       img.style.top = "0";
       img.style.bottom = "auto";
 
-      /*
-        Progresso pelo quanto a pista já “passou” do topo.
-        total ≈ distância em que o sticky consegue scrubar.
-      */
       const rect = track.getBoundingClientRect();
-      const total = Math.max(track.offsetHeight - vh, 1);
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      const t = scrolled / total;
+      const pinTotal = Math.max(track.offsetHeight - vh, 1);
 
-      const glassShare = GLASS_RANGE_VH / (GLASS_RANGE_VH + FOOTER_RANGE_VH);
-      const glassProgress = Math.min(t / glassShare, 1);
+      /*
+        Abertura começa com pezinho de footer, mas é mapeada em OPEN_RANGE_VH
+        de scroll (mais range = mais lenta). Footer sobe só depois.
+      */
+      const glassEntryTop = Math.max(vh - startPx - OPEN_AFTER_FOOTER_PX, 1);
+      const openRangePx = (OPEN_RANGE_VH / 100) * vh;
+      const footerRangePx = (FOOTER_RANGE_VH / 100) * vh;
+
+      let fromOpen = 0;
+      if (rect.top < glassEntryTop) {
+        if (rect.top > 0) {
+          fromOpen = glassEntryTop - rect.top;
+        } else {
+          fromOpen = glassEntryTop + Math.min(-rect.top, pinTotal);
+        }
+      }
+
+      const glassProgress = Math.min(fromOpen / Math.max(openRangePx, 1), 1);
       const footerProgress =
-        t <= glassShare ? 0 : Math.min((t - glassShare) / (1 - glassShare), 1);
+        fromOpen <= openRangePx
+          ? 0
+          : Math.min((fromOpen - openRangePx) / Math.max(footerRangePx, 1), 1);
 
       const frameH = startPx + glassProgress * (maxPx - startPx);
       frame.style.height = `${frameH}px`;
+      frame.style.top = "0";
       frame.style.transform = `translate3d(0, ${-footerProgress * maxPx}px, 0)`;
 
       const footerY = -peek - footerProgress * (footerH - peek);
       footerWrap.style.transform = `translate3d(0, ${footerY}px, 0)`;
 
-      // Frase: centro da faixa → desce até a base (via top, sem transform)
       if (caption) {
         const centerY = Math.max((startPx - captionH) / 2, 0);
         const bottomY = Math.max(frameH - captionH - bottomPad, 0);
@@ -82,7 +102,6 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    // Garante update mesmo se o scroll for em outro container
     document.addEventListener("scroll", onScroll, { passive: true, capture: true });
 
     return () => {
@@ -97,7 +116,7 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
     <section
       ref={trackRef}
       className="home-closer relative z-0"
-      style={{ height: `${GLASS_RANGE_VH + FOOTER_RANGE_VH + 100}svh` }}
+      style={{ height: `${OPEN_RANGE_VH + FOOTER_RANGE_VH + 100}svh` }}
       aria-label={t(siteCopy.footerClose, locale)}
     >
       <div className="sticky top-0 h-svh overflow-hidden bg-[#bdc9ad]">

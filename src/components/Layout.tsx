@@ -1,12 +1,13 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import logoFull from "../assets/mana-house-logo-full.png";
 import symbol from "../assets/mana-house-symbol.png";
 import wordmark from "../assets/mana-house-wordmark.png";
 import { siteCopy, t } from "../data/content";
 import { setSiteLocale, useLocale } from "../hooks/use-locale";
 import { SiteFooter } from "./SiteFooter";
+import { resetHomeHeroIntro } from "./home/home-hero-intro";
 
 const nav = [
   { to: "/" as const, label: siteCopy.nav.home },
@@ -25,14 +26,25 @@ export function Layout() {
   const locale = useLocale();
   const logoAlt = "Mana House AMO logo Ipanema Rio de Janeiro";
   const isHome = loc.pathname === "/";
-  const compact = !isHome || scrolled;
+  // Mesma regra da home: topo “completo”; ao rolar → menu compacto (glass + logo full)
+  const compact = scrolled;
 
-  useEffect(() => {
+  // Home: trava o scroll no splash; header só com .home-hero-ready
+  useLayoutEffect(() => {
+    const root = document.documentElement;
     if (!isHome) {
-      setScrolled(true);
+      resetHomeHeroIntro();
+      root.classList.remove("home-splash-lock", "home-hero-ready");
+      setScrolled(window.scrollY > 48);
       return;
     }
+    resetHomeHeroIntro();
+    root.classList.add("home-splash-lock");
+    root.classList.remove("home-hero-ready");
+    setScrolled(false);
+  }, [isHome]);
 
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -44,17 +56,24 @@ export function Layout() {
       loc.pathname === to ? "underline underline-offset-4" : ""
     }`;
 
+  // Topo home = branco (foto); topo internas = escuro (fundo cream); compacto = sempre branco
+  const onLightTop = !isHome && !compact;
+
   return (
     <div className="flex min-h-screen flex-col">
       <header
-        className={`site-header left-0 right-0 top-0 z-50 ${
-          isHome ? "fixed text-white" : "relative bg-[#f2eadf] text-[#171717]"
-        } ${compact ? "site-header--scrolled" : ""} ${
-          isHome && compact ? "site-header--home-scrolled" : ""
-        }`}
+        className={[
+          "site-header left-0 right-0 top-0 z-50 fixed",
+          isHome ? "site-header--home-intro" : "",
+          compact ? "site-header--scrolled site-header--home-scrolled text-white" : "",
+          !compact && isHome ? "text-white" : "",
+          onLightTop ? "text-[#171717]" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         <div className="site-header-inner relative mx-auto flex h-20 max-w-[1600px] items-center px-5 md:px-7">
-          {/* Wordmark lateral — some ao rolar */}
+          {/* Wordmark + Services… — some no scroll (igual home) */}
           <Link
             to="/"
             className={`site-header-wordmark shrink-0 ${compact ? "is-hidden" : ""}`}
@@ -66,11 +85,12 @@ export function Layout() {
               alt="Mana House"
               width={454}
               height={64}
-              className="h-auto w-[126px] object-contain md:w-[145px]"
+              className={`h-auto w-[126px] object-contain md:w-[145px] ${
+                onLightTop ? "brightness-0" : ""
+              }`}
             />
           </Link>
 
-          {/* Menus desktop — ficam à esquerda (também ao rolar) */}
           <nav
             className={`site-header-nav site-header-nav--left hidden md:flex ${
               compact ? "is-compact" : ""
@@ -84,22 +104,20 @@ export function Layout() {
             ))}
           </nav>
 
-          {/* Centro: símbolo no topo → logo full ao rolar */}
+          {/* Centro: símbolo + tagline no topo → logo full ao rolar */}
           <Link to="/" className="site-header-center" aria-label="Mana House">
             <img
               src={symbol}
               alt=""
               aria-hidden
-              className={`site-header-symbol object-contain ${isHome ? "invert" : ""} ${
-                compact ? "is-hidden" : ""
-              }`}
+              className={`site-header-symbol object-contain ${
+                !compact && isHome ? "invert" : ""
+              } ${onLightTop ? "brightness-0" : ""} ${compact ? "is-hidden" : ""}`}
             />
             <img
               src={logoFull}
               alt={logoAlt}
-              className={`site-header-logo-full object-contain ${isHome ? "" : "brightness-0"} ${
-                compact ? "is-visible" : ""
-              }`}
+              className={`site-header-logo-full object-contain ${compact ? "is-visible" : ""}`}
             />
             <span
               className={`site-header-tagline mt-0 hidden whitespace-nowrap text-center text-[8.5px] uppercase leading-[1.35] tracking-[0.25em] md:block ${
@@ -149,7 +167,11 @@ export function Layout() {
 
         {open && (
           <nav
-            className={`${isHome ? "bg-black/85 text-white" : "bg-[#f2eadf]"} flex flex-col gap-5 border-t border-current/15 px-5 py-7 md:hidden`}
+            className={`flex flex-col gap-5 border-t px-5 py-7 md:hidden ${
+              compact || isHome
+                ? "border-white/15 bg-black/85 text-white"
+                : "border-black/15 bg-[#f2eadf] text-[#171717]"
+            }`}
           >
             {nav.map((n) => (
               <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="text-xl">
@@ -170,7 +192,7 @@ export function Layout() {
         )}
       </header>
 
-      <main className={`relative flex-1 ${isHome ? "" : "bg-[#f2eadf]"}`}>
+      <main className={`relative flex-1 ${isHome ? "" : "bg-[#f2eadf] pt-20"}`}>
         <Outlet />
       </main>
 

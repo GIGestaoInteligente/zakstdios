@@ -328,8 +328,15 @@
 
   .site-header-nav--left.is-compact {
     position: absolute;
-    left: 1.25rem;
+    /* Alinha com hero-about / experience (1.15rem → md: 2rem / pl-8) */
+    left: 1.15rem;
     margin-left: 0;
+  }
+
+  @media (min-width: 768px) {
+    .site-header-nav--left.is-compact {
+      left: 2rem;
+    }
   }
 
   .site-header-center {
@@ -421,13 +428,35 @@
     overflow: hidden !important;
   }
 
+  /*
+    Menu na home: no DOM, mas invisível até html.home-hero-ready
+    (classe setada no fim da subida da imagem — sem depender de evento React).
+  */
+  .site-header--home-intro {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(0, -10px, 0);
+  }
+
+  html.home-hero-ready .site-header--home-intro {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 650ms;
+  }
+
   .home-banner-rise {
     position: absolute;
     inset: 0;
     z-index: 10;
-    background: #1a1a1a;
+    background: #000000;
     transform: translate3d(0, 100%, 0);
-    transition: transform 5000ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 1600ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
   }
 
@@ -444,7 +473,7 @@
     width: min(34vw, 26rem);
     max-width: calc(100% - 2.3rem);
     font-family: var(--font-sans);
-    font-size: clamp(0.85rem, 1.16vw, 1.05rem);
+    font-size: clamp(0.95rem, 1.35vw, 1.25rem);
     font-weight: var(--font-weight-sans-medium);
     font-style: normal;
     font-variation-settings: normal;
@@ -460,6 +489,32 @@
 
   .experience-section {
     min-height: auto;
+    overflow-x: clip;
+  }
+
+  /*
+    Lista de experiências — colada no canto direito.
+    Para puxar mais à ESQUERDA: aumente o width (ex.: 75vw, 80rem).
+    Para encolher: diminua o width.
+  */
+  .experience-list {
+    margin-left: auto;
+    margin-right: 0;
+    width: min(72vw, 100%);
+    max-width: none;
+    align-self: flex-end;
+  }
+
+  @media (min-width: 1024px) {
+    .experience-list {
+      /* ↑ aumente estes dois valores para ir mais à esquerda */
+      width: min(42vw, 70rem);
+    }
+  }
+
+  .experience-list .experience-rows,
+  .experience-list .experience-link {
+    width: 100%;
   }
 
   .experience-intro {
@@ -482,6 +537,7 @@
     position: relative;
     z-index: 3;
     display: flex;
+    flex-direction: row;
     align-items: flex-end;
     gap: 0.85rem;
     margin-bottom: 1.75rem;
@@ -494,12 +550,13 @@
       transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  /* Texto do item (banho) à esquerda da foto — como na 1ª imagem */
   .experience-preview .experience-copy {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0;
-    max-width: none;
+    max-width: 11rem;
     width: max-content;
     text-align: right;
     line-height: 1.35;
@@ -520,10 +577,9 @@
       margin-bottom: 0;
     }
 
-    /* Distância até a lista: quanto menor o rem, mais perto */
     .experience-preview--right {
       top: 36%;
-      right: calc(100% + 6.5rem);
+      right: calc(100% + 8.5rem);
       left: auto;
       transform: none;
     }
@@ -537,7 +593,7 @@
 
     .experience-preview--top {
       top: 6%;
-      right: calc(100% + 5.75rem);
+      right: calc(100% + 6.75rem);
       left: auto;
       transform: none;
     }
@@ -561,7 +617,7 @@
 
     .experience-section {
       padding-left: 1rem;
-      padding-right: 1rem;
+      padding-right: 0;
     }
 
     .experience-intro {
@@ -569,12 +625,15 @@
     }
 
     .experience-preview {
+      flex-direction: row;
       justify-content: flex-start;
+      align-items: flex-end;
     }
 
     .experience-preview .experience-copy {
-      align-items: flex-start;
-      text-align: left;
+      align-items: flex-end;
+      text-align: right;
+      max-width: 9.5rem;
     }
 
     .experience-preview .experience-copy-line {
@@ -950,6 +1009,7 @@
 
   .experience-link {
     padding-left: 0;
+    padding-right: 0;
     font-family: var(--font-mix-vf);
     font-weight: var(--font-weight-mix-light);
     font-style: normal;
@@ -963,6 +1023,7 @@
   .experience-link:hover,
   .experience-link:focus-visible {
     padding-left: 0;
+    padding-right: 0;
   }
 
   .experience-link.is-active {
@@ -1064,12 +1125,12 @@
     will-change: height;
   }
 
-  /* Caption closer — Season Mix Regular (modelo) */
+  /* Caption closer — Mix sem serifa */
   .home-closer-caption {
-    font-family: var(--font-mix);
-    font-weight: var(--font-weight-mix-regular);
+    font-family: var(--font-mix-vf);
+    font-weight: var(--font-weight-mix-medium);
     font-style: normal;
-    font-variation-settings: normal;
+    font-variation-settings: "wght" 580, "SERF" 0, "slnt" 0;
     letter-spacing: 0.01em;
     -webkit-font-smoothing: antialiased;
   }
@@ -1088,7 +1149,7 @@
   .membership-headline {
     font-family: var(--font-mix-vf);
     font-weight: var(--font-weight-mix-medium);
-    font-variation-settings: "wght" 580, "SERF" 50, "slnt" 0;
+    font-variation-settings: "wght" 580, "SERF" 0, "slnt" 0;
     letter-spacing: -0.03em;
   }
 
@@ -1125,7 +1186,7 @@
   .journal-title {
     font-family: var(--font-mix-vf);
     font-weight: var(--font-weight-mix-medium);
-    font-variation-settings: "wght" 580, "SERF" 50, "slnt" 0;
+    font-variation-settings: "wght" 580, "SERF" 0, "slnt" 0;
     letter-spacing: -0.03em;
   }
 
@@ -1150,7 +1211,7 @@
     font-variation-settings: normal;
   }
 
-  /* Footer UI — Sans Medium; tagline Mix Regular */
+  /* Footer UI — Sans Medium; tagline Sans (sem serifa) */
   .site-footer {
     font-family: var(--font-sans);
     font-weight: var(--font-weight-sans-medium);
@@ -1158,8 +1219,8 @@
   }
 
   .site-footer-tagline {
-    font-family: var(--font-mix);
-    font-weight: var(--font-weight-mix-regular);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-sans-medium);
     font-variation-settings: normal;
   }
 
