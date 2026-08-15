@@ -1,8 +1,8 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useState } from "react";
-import logoFull from "../assets/mana-house-logo-full.png";
-import symbol from "../assets/mana-house-symbol.png";
+import logoFull from "../assets/MANAHOUSE_Full-C.svg";
+import symbol from "../assets/MANAHOUSE_Logo-A.svg";
 import wordmark from "../assets/mana-house-wordmark.png";
 import { siteCopy, t } from "../data/content";
 import { setSiteLocale, useLocale } from "../hooks/use-locale";
@@ -72,7 +72,7 @@ export function Layout() {
           .filter(Boolean)
           .join(" ")}
       >
-        <div className="site-header-inner relative mx-auto flex h-20 max-w-[1600px] items-center px-5 md:px-7">
+        <div className="site-header-inner relative mx-auto flex max-w-[1600px] items-start px-5 md:px-7">
           {/* Wordmark + Services… — some no scroll (igual home) */}
           <Link
             to="/"
@@ -85,7 +85,7 @@ export function Layout() {
               alt="Mana House"
               width={454}
               height={64}
-              className={`h-auto w-[126px] object-contain md:w-[145px] ${
+              className={`site-header-wordmark-img h-auto object-contain ${
                 onLightTop ? "brightness-0" : ""
               }`}
             />
@@ -104,23 +104,30 @@ export function Layout() {
             ))}
           </nav>
 
-          {/* Centro: símbolo + tagline no topo → logo full ao rolar */}
+          {/* Centro: símbolo + tagline (ref) → logo full ao rolar */}
           <Link to="/" className="site-header-center" aria-label="Mana House">
-            <img
-              src={symbol}
-              alt=""
+            <span
+              className={`site-header-symbol-wrap ${compact ? "is-hidden" : ""}`}
               aria-hidden
-              className={`site-header-symbol object-contain ${
-                !compact && isHome ? "invert" : ""
-              } ${onLightTop ? "brightness-0" : ""} ${compact ? "is-hidden" : ""}`}
-            />
+            >
+              <img
+                src={symbol}
+                alt=""
+                aria-hidden
+                className={`site-header-symbol object-contain ${
+                  !compact && isHome ? "site-header-symbol--on-dark" : ""
+                } ${onLightTop ? "site-header-symbol--on-light" : ""}`}
+              />
+            </span>
             <img
               src={logoFull}
               alt={logoAlt}
-              className={`site-header-logo-full object-contain ${compact ? "is-visible" : ""}`}
+              className={`site-header-logo-full object-contain ${
+                compact ? "is-visible brightness-0 invert" : ""
+              }`}
             />
             <span
-              className={`site-header-tagline mt-0 hidden whitespace-nowrap text-center text-[8.5px] uppercase leading-[1.35] tracking-[0.25em] md:block ${
+              className={`site-header-tagline mt-0 hidden whitespace-nowrap text-center uppercase md:block ${
                 compact ? "is-hidden" : ""
               }`}
             >
@@ -192,7 +199,7 @@ export function Layout() {
         )}
       </header>
 
-      <main className={`relative flex-1 ${isHome ? "" : "bg-[#f2eadf] pt-20"}`}>
+      <main className={`relative flex-1 ${isHome ? "" : "bg-[#f2eadf] pt-[7.25rem]"}`}>
         <Outlet />
       </main>
 

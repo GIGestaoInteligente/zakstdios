@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import breatheMark from "../../assets/mana-house-breathe-wordmark.png";
 import hero from "../../assets/mana-house-hero-recuperacao.webp";
-import symbol from "../../assets/mana-house-symbol.png";
+import symbol from "../../assets/MANAHOUSE_Logo-A.svg";
 import { siteCopy, t } from "../../data/content";
 import type { SiteLocale } from "../../hooks/use-locale";
 import { markHomeHeroIntroDone } from "./home-hero-intro";
@@ -73,9 +73,9 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
           <img
             src={symbol}
             alt=""
-            width={303}
-            height={294}
-            className="h-14 w-14 object-contain invert md:h-16 md:w-16"
+            width={327}
+            height={318}
+            className="hero-splash-symbol h-14 w-14 object-contain md:h-16 md:w-16"
           />
           <span className="mt-1 text-[10px] leading-none text-white/80">®</span>
           <p className="type-sans-medium mt-4 text-[11px] uppercase tracking-[0.22em] text-white md:text-xs">
@@ -134,8 +134,22 @@ export function HomeHero({ locale }: { locale: SiteLocale }) {
         </div>
 
         <div className="hero-about-corner">
-          <p>{t(siteCopy.about.body, locale)}</p>
-          <p>{t(siteCopy.about.body2, locale)}</p>
+          <p>
+            {siteCopy.about.bodyLines[locale].map((line, i) => (
+              <span key={`about-1-${i}`}>
+                {i > 0 ? <br /> : null}
+                {line}
+              </span>
+            ))}
+          </p>
+          <p>
+            {siteCopy.about.body2Lines[locale].map((line, i) => (
+              <span key={`about-2-${i}`}>
+                {i > 0 ? <br /> : null}
+                {line}
+              </span>
+            ))}
+          </p>
         </div>
       </div>
     </section>

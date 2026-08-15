@@ -1,28 +1,30 @@
 import { useEffect, useRef } from "react";
-import wetGlass from "../../assets/mana-house-textura-vidro-molhado.webp";
+import wetGlass from "../../assets/mana-house-textura-vidro-molhado.png";
 import { siteCopy, t } from "../../data/content";
 import type { SiteLocale } from "../../hooks/use-locale";
 import { SiteFooter } from "../SiteFooter";
 
-/** Faixa fechada (vh) — igual à 2ª imagem. */
+/** Faixa fechada do vidro (vh). */
 const START_VH = 18;
 /**
- * Extra de rolagem (vh) para completar a abertura do vidro depois do trigger.
- * ↑ maior = abertura mais lenta. ~80–120 = razoável; 40 = mais rápida.
+ * Rolagem para o vidro ir de faixa → full (vh).
+ * Menor = open mais rápido (evita stage preta a meio enquanto o sticky pin).
  */
-const OPEN_RANGE_VH = 160;
-/** Rolagem (vh) só para o footer subir, depois do vidro aberto. */
-const FOOTER_RANGE_VH = 120;
-/** Quanto do footer fica visível sob o vidro (px). */
+const OPEN_RANGE_VH = 72;
+/** Rolagem do footer após o vidro a 100% (vh). */
+const FOOTER_RANGE_VH = 110;
+/** Peek do footer sob o vidro (px) — só com open completo. */
 const FOOTER_PEEK_PX = 460;
-/**
- * Faixa sage/footer (px) que deve aparecer sob o vidro
- * antes da abertura começar — evita o vidro colado na borda inferior.
- */
-const OPEN_AFTER_FOOTER_PX = 120;
+/** Open começa com a faixa completa no fundo. */
+const OPEN_AFTER_FOOTER_PX = 0;
+
+const SAGE = "#bdc9ad";
+/** Preto = mesmo fundo do Journal (fica *acima* do vidro quando a faixa está em baixo). */
+const STAGE_UNTIL_OPEN = "#000000";
 
 export function HomeCloser({ locale }: { locale: SiteLocale }) {
   const trackRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const footerWrapRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -30,11 +32,12 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
 
   useEffect(() => {
     const track = trackRef.current;
+    const stage = stageRef.current;
     const frame = frameRef.current;
     const footerWrap = footerWrapRef.current;
     const img = imgRef.current;
     const caption = captionRef.current;
-    if (!track || !frame || !footerWrap || !img) return;
+    if (!track || !stage || !frame || !footerWrap || !img) return;
 
     let raf = 0;
 
@@ -44,7 +47,12 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
       const startPx = (START_VH / 100) * vh;
       const maxPx = vh;
       const footerH = Math.max(footerWrap.offsetHeight, 1);
-      const peek = Math.min(FOOTER_PEEK_PX, footerH);
+      /* Peek escala com a viewport — em ecrã baixo não deixa o bloco “longe” */
+      const peek = Math.min(
+        FOOTER_PEEK_PX,
+        footerH,
+        Math.round(vh * (vh < 800 ? 0.72 : 0.55)),
+      );
       const bottomPad = 16;
       const captionH = caption?.offsetHeight || 32;
 
@@ -53,12 +61,9 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
       img.style.bottom = "auto";
 
       const rect = track.getBoundingClientRect();
+      const stageTop = stage.getBoundingClientRect().top;
       const pinTotal = Math.max(track.offsetHeight - vh, 1);
 
-      /*
-        Abertura começa com pezinho de footer, mas é mapeada em OPEN_RANGE_VH
-        de scroll (mais range = mais lenta). Footer sobe só depois.
-      */
       const glassEntryTop = Math.max(vh - startPx - OPEN_AFTER_FOOTER_PX, 1);
       const openRangePx = (OPEN_RANGE_VH / 100) * vh;
       const footerRangePx = (FOOTER_RANGE_VH / 100) * vh;
@@ -72,24 +77,69 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
         }
       }
 
-      const glassProgress = Math.min(fromOpen / Math.max(openRangePx, 1), 1);
-      const footerProgress =
-        fromOpen <= openRangePx
-          ? 0
-          : Math.min((fromOpen - openRangePx) / Math.max(footerRangePx, 1), 1);
+      const raw = Math.min(fromOpen / Math.max(openRangePx, 1), 1);
+      /* ease-out: preenche a tela cedo no scroll */
+      const scrollProgress = 1 - (1 - raw) * (1 - raw);
 
-      const frameH = startPx + glassProgress * (maxPx - startPx);
+      /*
+        Altura: scroll open + o quanto a stage já revelou.
+        A stage revelada fica sempre coberta pelo vidro → sem “buraco” preto.
+      */
+      const scrollOpenH = startPx + scrollProgress * (maxPx - startPx);
+      const revealedH =
+        stageTop >= maxPx ? 0 : stageTop > 0 ? maxPx - stageTop : maxPx;
+      const frameH = Math.min(maxPx, Math.max(scrollOpenH, revealedH, startPx));
+      const glassProgress = Math.min(
+        Math.max((frameH - startPx) / Math.max(maxPx - startPx, 1), 0),
+        1,
+      );
+      const glassOpen = glassProgress >= 0.999;
+      const footerProgress = glassOpen
+        ? Math.min(
+            Math.max(fromOpen - openRangePx, 0) / Math.max(footerRangePx, 1),
+            1,
+          )
+        : 0;
+
+      /*
+        Vidro colado ao fundo do ecrã / stage e cresce para CIMA.
+        Assim não há faixa preta sob o vidro — o preto (Journal) fica por cima
+        até o frame cobrir tudo.
+      */
+      let frameTop: number;
+      if (stageTop > 0) {
+        // Sticky ainda a subir: fundo do frame = fundo da viewport
+        frameTop = maxPx - stageTop - frameH;
+        frameTop = Math.max(0, Math.min(maxPx - frameH, frameTop));
+      } else {
+        // Sticky pinado: abre do fundo da stage para o topo
+        frameTop = maxPx - frameH;
+      }
+
       frame.style.height = `${frameH}px`;
-      frame.style.top = "0";
+      frame.style.top = `${frameTop}px`;
+      frame.style.bottom = "auto";
       frame.style.transform = `translate3d(0, ${-footerProgress * maxPx}px, 0)`;
 
-      const footerY = -peek - footerProgress * (footerH - peek);
+      stage.style.backgroundColor = glassOpen ? SAGE : STAGE_UNTIL_OPEN;
+
+      const footerY = glassOpen
+        ? maxPx - peek + footerProgress * (0 - (maxPx - peek))
+        : maxPx;
       footerWrap.style.transform = `translate3d(0, ${footerY}px, 0)`;
+      footerWrap.style.visibility = glassOpen ? "visible" : "hidden";
+      footerWrap.setAttribute("aria-hidden", glassOpen ? "false" : "true");
 
       if (caption) {
         const centerY = Math.max((startPx - captionH) / 2, 0);
         const bottomY = Math.max(frameH - captionH - bottomPad, 0);
-        const captionY = centerY + glassProgress * (bottomY - centerY);
+        /*
+          A frase NÃO usa glassProgress do frame (frame cresce cedo com a stage).
+          Usa o open real do scroll com ease-in: fica no centro da faixa no início
+          e só desce para a base à medida que o open de verdade avança.
+        */
+        const captionT = raw * raw;
+        const captionY = centerY + captionT * (bottomY - centerY);
         caption.style.top = `${captionY}px`;
         caption.style.transform = "none";
       }
@@ -119,11 +169,14 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
       style={{ height: `${OPEN_RANGE_VH + FOOTER_RANGE_VH + 100}svh` }}
       aria-label={t(siteCopy.footerClose, locale)}
     >
-      <div className="sticky top-0 h-svh overflow-hidden bg-[#bdc9ad]">
+      <div
+        ref={stageRef}
+        className="sticky top-0 h-svh overflow-hidden bg-black"
+      >
         <div
           ref={frameRef}
-          className="home-closer-frame absolute left-0 right-0 top-0 z-10 overflow-hidden will-change-[height,transform]"
-          style={{ height: `${START_VH}svh` }}
+          className="home-closer-frame absolute left-0 right-0 z-10 overflow-hidden will-change-[height,top,transform]"
+          style={{ height: `${START_VH}svh`, bottom: 0, top: "auto" }}
         >
           <img
             ref={imgRef}
@@ -149,8 +202,12 @@ export function HomeCloser({ locale }: { locale: SiteLocale }) {
 
         <div
           ref={footerWrapRef}
-          className="absolute left-0 right-0 top-full z-0 will-change-transform"
-          style={{ transform: `translate3d(0, -${FOOTER_PEEK_PX}px, 0)` }}
+          className="absolute left-0 right-0 top-0 z-0 w-full will-change-transform"
+          style={{
+            transform: "translate3d(0, 100svh, 0)",
+            visibility: "hidden",
+          }}
+          aria-hidden
         >
           <SiteFooter locale={locale} closer />
         </div>

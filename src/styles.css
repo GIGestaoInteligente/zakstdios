@@ -71,6 +71,16 @@
 @font-face {
   font-family: "Season Sans";
   src:
+    url("/fonts/Season/Season Sans/SeasonSans-TRIAL-Light.woff2") format("woff2"),
+    url("/fonts/Season/Season Sans/SeasonSans-TRIAL-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Season Sans";
+  src:
     url("/fonts/SeasonSans-TRIAL-Medium.woff2") format("woff2"),
     url("/fonts/SeasonSans-TRIAL-Medium.otf") format("opentype");
   font-weight: 550;
@@ -122,6 +132,7 @@
 
 :root {
   --radius: 0.75rem;
+  --font-weight-sans-light: 300;
   --font-weight-sans-medium: 550;
   --font-weight-sans-semibold: 650;
   --font-weight-mix-light: 300;
@@ -288,21 +299,46 @@
     backdrop-filter: blur(10px);
   }
 
+  /*
+    Ref 1024×117: nav/wordmark no terço superior; símbolo ~28px;
+    vão ~20px até Recovery; bloco centro ~y20–80.
+  */
   .site-header-inner {
-    transition: height 400ms ease;
+    height: 7.25rem;
+    padding-top: 1.35rem;
+    align-items: flex-start;
+    overflow: visible;
+    transition:
+      height 400ms ease,
+      padding-top 400ms ease;
   }
 
   .site-header--scrolled .site-header-inner {
     height: 4.25rem;
+    padding-top: 0;
+    align-items: center;
   }
 
   .site-header-wordmark {
     position: relative;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    height: 1rem;
     transition:
       opacity 400ms ease,
       transform 400ms ease,
       visibility 400ms ease;
+  }
+
+  .site-header-wordmark-img {
+    width: 106px;
+  }
+
+  @media (min-width: 768px) {
+    .site-header-wordmark-img {
+      width: 118px;
+    }
   }
 
   .site-header-wordmark.is-hidden {
@@ -317,20 +353,23 @@
   .site-header-nav {
     align-items: center;
     gap: 1.75rem;
+    height: 1rem;
     transition:
       opacity 400ms ease,
       transform 400ms ease;
   }
 
   .site-header-nav--left {
-    margin-left: 2.5rem;
+    margin-left: 2.15rem;
   }
 
   .site-header-nav--left.is-compact {
     position: absolute;
-    /* Alinha com hero-about / experience (1.15rem → md: 2rem / pl-8) */
     left: 1.15rem;
+    top: 50%;
     margin-left: 0;
+    height: auto;
+    transform: translateY(-50%);
   }
 
   @media (min-width: 768px) {
@@ -339,22 +378,38 @@
     }
   }
 
+  /*
+    Centro: símbolo alinhado à faixa do nav; tagline abaixo com vão da ref.
+    Logo full absolute quando oculta (não abre vão no flex).
+  */
   .site-header-center {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 1.2rem;
     z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.10 rem;
-    transform: translate(-50%, -15%);
+    justify-content: flex-start;
+    gap: 1.15rem;
+    transform: translateX(-50%);
   }
 
-  .site-header-symbol {
-    height: 2.00rem;
-    width: 2.00rem;
-    display: block;
+  .site-header--scrolled .site-header-center {
+    top: 50%;
+    gap: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  .site-header-symbol-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.85rem;
+    height: 1.85rem;
+    overflow: hidden;
+    line-height: 0;
     transition:
       opacity 350ms ease,
       transform 350ms ease,
@@ -362,13 +417,13 @@
   }
 
   @media (min-width: 768px) {
-    .site-header-symbol {
-      height: 2.40rem;
-      width: 2.40rem;
+    .site-header-symbol-wrap {
+      width: 2.05rem;
+      height: 2.05rem;
     }
   }
 
-  .site-header-symbol.is-hidden {
+  .site-header-symbol-wrap.is-hidden {
     position: absolute;
     opacity: 0;
     visibility: hidden;
@@ -376,12 +431,48 @@
     pointer-events: none;
   }
 
+  .site-header-symbol {
+    display: block;
+    width: 132%;
+    height: 132%;
+    max-width: none;
+    flex-shrink: 0;
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Silhueta branca limpa no escuro (sem borda cinza do invert) */
+  .site-header-symbol--on-dark,
+  .hero-splash-symbol {
+    filter: brightness(0) invert(1);
+  }
+
+  /* Silhueta preta limpa sobre fundo claro */
+  .site-header-symbol--on-light {
+    filter: brightness(0);
+  }
+
+  .hero-splash-symbol {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
   .site-header-logo-full {
+    position: absolute;
+    left: 50%;
+    top: 50%;
     height: auto;
-    width: min(42vw, 13.5rem);
+    width: min(58vw, 16.5rem);
+    display: block;
     opacity: 0;
     visibility: hidden;
-    transform: scale(0.92);
+    transform: translate(-50%, -50%) scale(0.92);
     transition:
       opacity 400ms ease,
       transform 400ms ease,
@@ -390,6 +481,9 @@
   }
 
   .site-header-logo-full.is-visible {
+    position: relative;
+    left: auto;
+    top: auto;
     opacity: 1;
     visibility: visible;
     transform: scale(1);
@@ -398,6 +492,9 @@
 
   .site-header-tagline {
     margin-top: 0;
+    font-size: 8px;
+    line-height: 1.45;
+    letter-spacing: 0.2em;
     transition:
       opacity 300ms ease,
       transform 300ms ease,
@@ -411,12 +508,20 @@
     height: 0;
     margin: 0;
     overflow: hidden;
+    line-height: 0;
   }
 
   .site-header-actions {
     position: relative;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    height: 1rem;
     transition: transform 400ms ease;
+  }
+
+  .site-header--scrolled .site-header-actions {
+    height: auto;
   }
 
   .site-header-actions.is-compact {
@@ -464,32 +569,78 @@
     transform: translate3d(0, 0, 0);
   }
 
-  /* Hero about — Season Sans Medium (corpo do modelo) */
+  /*
+    Hero about — 1ª ref: Light, branco, quebras de linha fixas.
+    Largura em fit-content para não reflowar as <br>.
+  */
   .hero-about-corner {
     position: absolute;
     left: 1.15rem;
     bottom: 1.15rem;
     z-index: 12;
-    width: min(34vw, 26rem);
+    width: fit-content;
     max-width: calc(100% - 2.3rem);
     font-family: var(--font-sans);
-    font-size: clamp(0.95rem, 1.35vw, 1.25rem);
-    font-weight: var(--font-weight-sans-medium);
+    font-size: 17pt;
+    font-weight: var(--font-weight-sans-light);
     font-style: normal;
     font-variation-settings: normal;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    color: rgb(255 255 255 / 94%);
-    text-wrap: pretty;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    color: #ffffff;
+    text-align: left;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .hero-about-corner p {
+    margin: 0;
+    font: inherit;
+    font-weight: inherit;
+    color: inherit;
   }
 
   .hero-about-corner p + p {
-    margin-top: 0.95rem;
+    margin-top: 1.15em;
   }
 
+  @media (min-width: 768px) {
+    .hero-about-corner {
+      left: 2rem;
+      bottom: 1.75rem;
+    }
+  }
+
+  /* Em telas estreitas permite wrap natural se a linha for maior que a viewport */
+  @media (max-width: 640px) {
+    .hero-about-corner {
+      white-space: normal;
+      width: min(92vw, 22rem);
+    }
+  }
+
+  /*
+    Ref. 1ª imagem: bloco bem alto (quase 1 viewport),
+    conteúdo com ar em cima/baixo — não “esmagado” na altura do texto.
+  */
   .experience-section {
-    min-height: auto;
+    box-sizing: border-box;
+    min-height: 80svh;
+    min-height: 80dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: clamp(4.5rem, 11vh, 7.5rem);
+    padding-bottom: clamp(2.75rem, 6vh, 4.5rem);
     overflow-x: clip;
+  }
+
+  /* Título e lista no mesmo nível do topo (ref.) */
+  .experience-layout {
+    width: 100%;
+    flex: 1 1 auto;
+    align-items: flex-start;
   }
 
   /*
@@ -502,19 +653,39 @@
     margin-right: 0;
     width: min(72vw, 100%);
     max-width: none;
-    align-self: flex-end;
+    align-self: flex-start;
+    margin-top: 0;
   }
 
   @media (min-width: 1024px) {
     .experience-list {
       /* ↑ aumente estes dois valores para ir mais à esquerda */
-      width: min(42vw, 70rem);
+      width: min(46vw, 42rem);
+      margin-top: 0;
     }
   }
 
   .experience-list .experience-rows,
   .experience-list .experience-link {
     width: 100%;
+  }
+
+  /* Lista compacta entre linhas, mas escala maior p/ preencher a section */
+  .experience-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgb(23 23 23 / 0.28);
+    line-height: 0;
+  }
+
+  .experience-row {
+    display: block;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
   }
 
   .experience-intro {
@@ -539,27 +710,32 @@
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-    gap: 0.85rem;
-    margin-bottom: 1.75rem;
+    gap: 1.1rem;
+    margin-bottom: 1.25rem;
     pointer-events: none;
     transition:
-      top 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      left 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      right 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      bottom 450ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+      top 480ms cubic-bezier(0.22, 1, 0.36, 1),
+      right 480ms cubic-bezier(0.22, 1, 0.36, 1),
+      left 480ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Texto do item (banho) à esquerda da foto — como na 1ª imagem */
+  /* Foto ~3 linhas — escala da ref. 1 */
+  /* Foto ~3 linhas da lista */
+  .experience-preview-media {
+    width: clamp(8.25rem, 14vw, 11.5rem);
+  }
+
+  /* Texto à esquerda da foto, base alinhada ao fundo da imagem */
   .experience-preview .experience-copy {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0;
-    max-width: 11rem;
+    max-width: 12.5rem;
     width: max-content;
     text-align: right;
-    line-height: 1.35;
+    line-height: 1.3;
     font-family: var(--font-sans);
     font-weight: var(--font-weight-sans-medium);
     font-variation-settings: normal;
@@ -575,26 +751,31 @@
     .experience-preview {
       position: absolute;
       margin-bottom: 0;
+      left: auto;
+      right: 100%;
+    }
+
+    /*
+      Efeito triângulo (3 posições que alternam por item):
+      - top:    alto, afastado da lista
+      - right:  meio, mais à esquerda (afastado)
+      - left:   mais baixo, colado às linhas
+    */
+    .experience-preview--top {
+      top: 8%;
+      right: calc(100% + 5.5rem);
+      transform: none;
     }
 
     .experience-preview--right {
-      top: 36%;
-      right: calc(100% + 8.5rem);
-      left: auto;
+      top: 34%;
+      right: calc(100% + 9.5rem);
       transform: none;
     }
 
     .experience-preview--left {
-      top: 46%;
-      right: calc(100% + 0.5rem);
-      left: auto;
-      transform: none;
-    }
-
-    .experience-preview--top {
-      top: 6%;
-      right: calc(100% + 6.75rem);
-      left: auto;
+      top: 52%;
+      right: calc(100% + 0.4rem);
       transform: none;
     }
   }
@@ -618,6 +799,9 @@
     .experience-section {
       padding-left: 1rem;
       padding-right: 0;
+      min-height: auto;
+      padding-top: 3.25rem;
+      padding-bottom: 2.5rem;
     }
 
     .experience-intro {
@@ -628,6 +812,11 @@
       flex-direction: row;
       justify-content: flex-start;
       align-items: flex-end;
+      gap: 0.75rem;
+    }
+
+    .experience-preview-media {
+      width: 7.25rem;
     }
 
     .experience-preview .experience-copy {
@@ -1000,7 +1189,7 @@
   }
 
   .scroll-reveal.experience-row {
-    transform: translateY(28px);
+    transform: translateY(10px);
   }
 
   .scroll-reveal.experience-row.is-visible {
@@ -1008,27 +1197,29 @@
   }
 
   .experience-link {
-    padding-left: 0;
-    padding-right: 0;
+    /* Palavras maiores; sem serifa; espaçamento vertical compacto */
+    display: block;
+    margin: 0;
+    padding: 0.08em 0 0.04em 0.4em;
+    border-bottom: 1px solid rgb(23 23 23 / 0.28);
+    line-height: 0.9;
     font-family: var(--font-mix-vf);
     font-weight: var(--font-weight-mix-light);
     font-style: normal;
-    font-variation-settings: "wght" 300, "SERF" 50, "slnt" 0;
-    transition:
-      color 350ms ease,
-      opacity 350ms ease,
-      font-variation-settings 350ms ease;
+    font-variation-settings: "wght" 280, "SERF" 0, "slnt" 0;
+    transition: color 350ms ease;
   }
 
   .experience-link:hover,
   .experience-link:focus-visible {
-    padding-left: 0;
+    padding-left: 0.4em;
     padding-right: 0;
   }
 
+  /* Ativo/hover: só a cor; mesma grossura da letra */
   .experience-link.is-active {
-    font-weight: var(--font-weight-mix-bold);
-    font-variation-settings: "wght" 300, "SERF" 50, "slnt" 0;
+    font-weight: var(--font-weight-mix-light);
+    font-variation-settings: "wght" 280, "SERF" 0, "slnt" 0;
   }
 
   .experience-image {
@@ -1183,15 +1374,19 @@
     font-variation-settings: normal;
   }
 
+  /* Título Journal: 2–3 linhas, branco puro, domina a hierarquia sob o quadrado */
   .journal-title {
     font-family: var(--font-mix-vf);
     font-weight: var(--font-weight-mix-medium);
-    font-variation-settings: "wght" 580, "SERF" 0, "slnt" 0;
-    letter-spacing: -0.03em;
+    font-variation-settings: "wght" 640, "SERF" 0, "slnt" 0;
+    letter-spacing: -0.035em;
+    color: #ffffff;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: manual;
   }
 
-  .journal-cta,
-  .ohana-cta {
+  .journal-cta {
     font-family: var(--font-sans);
     font-weight: var(--font-weight-sans-semibold);
     font-variation-settings: normal;
@@ -1211,17 +1406,210 @@
     font-variation-settings: normal;
   }
 
-  /* Footer UI — Sans Medium; tagline Sans (sem serifa) */
+  /* Footer UI — layout ref. rodapé (wordmark + cols direita + cantos) */
   .site-footer {
     font-family: var(--font-sans);
     font-weight: var(--font-weight-sans-medium);
     font-variation-settings: normal;
+    box-sizing: border-box;
+    padding: 1.25rem 1.25rem 1.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      padding: 1.75rem 2.5rem 2.25rem;
+    }
+  }
+
+  .site-footer.is-compact {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Home closer: full-height no desktop; em ecrãs menores acompanha o conteúdo */
+  .site-footer--closer {
+    min-height: auto;
+    padding: 4.25rem 1.25rem 1.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer--closer {
+      min-height: 100svh;
+      padding: 5.5rem 2.5rem 2.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer--closer {
+      padding: 6.25rem 2.5rem 2.5rem;
+    }
+  }
+
+  /*
+    Wordmark Hor-A-Rio: viewBox 2560×1440, letras ~x 328–2232 / y 598–844.
+    Ref: tinta ~96% da largura (margens ~1–3%). Recorte lateral + vertical
+    sem editar o SVG.
+  */
+  .site-footer-wordmark-wrap {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    /* janela ≈ x 308–2289 (1981) × y 575–875 (300) */
+    aspect-ratio: 1981 / 300;
+  }
+
+  .site-footer-wordmark {
+    display: block;
+    width: calc(2560 / 1981 * 100%);
+    max-width: none;
+    height: auto;
+    margin-left: calc(-308 / 1981 * 100%);
+    margin-top: calc(-575 / 1981 * 100%);
+    user-select: none;
+  }
+
+  .site-footer-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: clamp(2rem, 5vw, 3.25rem);
+  }
+
+  .site-footer-cols.is-closer {
+    margin-top: clamp(2.5rem, 7vh, 4.5rem);
+  }
+
+  .site-footer-cols.is-compact {
+    margin-top: 2rem;
+  }
+
+  .site-footer-cols-spacer {
+    display: none;
+  }
+
+  /*
+    Ref: colunas sob HOUSE (H ≈ 47% do wordmark recortado).
+    Spacer à esquerda = zona do MANA; grid preenche até o RIO.
+  */
+  @media (min-width: 768px) {
+    .site-footer-cols {
+      grid-template-columns: 47% minmax(0, 1fr);
+      column-gap: 0;
+    }
+
+    .site-footer-cols-spacer {
+      display: block;
+    }
+  }
+
+  .site-footer-cols-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem 2rem;
+    width: 100%;
+    text-align: left;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  @media (min-width: 640px) {
+    .site-footer-cols-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem clamp(1.25rem, 2.5vw, 2.5rem);
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer-cols-grid {
+      gap: 1.5rem clamp(1.75rem, 3vw, 3rem);
+    }
+  }
+
+  .site-footer-cols-grid ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer-cols-grid li + li {
+    margin-top: 0.35rem;
+  }
+
+  .site-footer-cols-grid a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-footer-cols-grid a:hover {
+    text-decoration: underline;
+  }
+
+  .site-footer-hours li {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.65rem 1rem;
+    white-space: nowrap;
+  }
+
+  .site-footer-bottom {
+    display: flex;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: clamp(3rem, 8vw, 5.5rem);
+  }
+
+  /*
+    Recover + símbolo: em ecrã pequeno fica logo abaixo das cols (sem auto
+    a empurrar para o fundo do 100svh). Em desktop mantém canto inferior.
+  */
+  .site-footer-bottom.is-closer {
+    margin-top: clamp(2.25rem, 6vh, 3.5rem);
+    padding-top: 0;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer-bottom.is-closer {
+      margin-top: clamp(2.75rem, 7vh, 4.5rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer-bottom.is-closer {
+      margin-top: auto;
+      padding-top: clamp(2.5rem, 6vh, 4.5rem);
+    }
   }
 
   .site-footer-tagline {
+    margin: 0;
     font-family: var(--font-sans);
     font-weight: var(--font-weight-sans-medium);
     font-variation-settings: normal;
+    font-size: 1.05rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer-tagline {
+      font-size: 1.15rem;
+    }
+  }
+
+  .site-footer-symbol {
+    display: block;
+    width: 3.25rem;
+    height: 3.25rem;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer-symbol {
+      width: 3.85rem;
+      height: 3.85rem;
+    }
   }
 
   /* Wordmark tipográfico — fallback se PNG não for usado */
@@ -1297,4 +1685,37 @@
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+/* Fora do @layer: pill ghost Ohana — texto à esquerda, pill mais largo à direita (layout) */
+a.ohana-cta {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  min-width: 17.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  /* mais espaço à direita que à esquerda = texto parte da esquerda */
+  padding: 0.95rem 3.25rem 0.95rem 1.65rem !important;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 90%);
+  background: transparent;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-sans-semibold);
+  font-variation-settings: normal;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-align: left !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.ohana-cta:hover {
+  background: #fff;
+  color: #171717;
 }

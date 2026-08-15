@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import symbol from "../assets/mana-house-symbol-footer.png";
-import wordmark from "../assets/mana-house-wordmark-footer.svg";
+import symbol from "../assets/MANAHOUSE_Logo-A.svg";
+import wordmark from "../assets/MANAHOUSE_Wordmark-Hor-A-Rio.svg";
 import { siteCopy, t } from "../data/content";
 import type { SiteLocale } from "../hooks/use-locale";
 
-/** Navegação — ordem da referência: Home, About, Services, Journal, Videos, Contact */
+/** Navegação — ordem da referência */
 const nav = [
   { to: "/" as const, label: siteCopy.nav.home },
   { to: "/" as const, hash: "sobre", label: { pt: "Sobre", en: "About" } },
@@ -13,6 +13,113 @@ const nav = [
   { to: "/vlog" as const, label: siteCopy.nav.vlog },
   { to: "/contato" as const, label: siteCopy.nav.contato },
 ];
+
+/** Horários — dia | hora (ref. layout) */
+const hoursLines = [
+  {
+    day: { pt: "Seg-Sex", en: "Mon-Fri" },
+    time: { pt: "8h—21h", en: "8am—9pm" },
+  },
+  {
+    day: { pt: "Sábado", en: "Saturday" },
+    time: { pt: "9h—18h", en: "9am—6pm" },
+  },
+  {
+    day: { pt: "Domingo", en: "Sunday" },
+    time: { pt: "fechado", en: "Closed" },
+  },
+] as const;
+
+function FooterBody({
+  locale,
+  closer = false,
+  compact = false,
+  showBottom = true,
+}: {
+  locale: SiteLocale;
+  closer?: boolean;
+  compact?: boolean;
+  showBottom?: boolean;
+}) {
+  const logoAlt = "Mana House AMO logo Ipanema Rio de Janeiro";
+
+  return (
+    <>
+      <div className={`site-footer-wordmark-wrap ${closer ? "is-closer" : ""}`}>
+        <img
+          src={wordmark}
+          alt="MANA HOUSE"
+          className="site-footer-wordmark"
+          draggable={false}
+        />
+      </div>
+
+      <div
+        className={`site-footer-cols ${
+          compact ? "is-compact" : ""
+        } ${closer ? "is-closer" : ""}`}
+      >
+        <div className="site-footer-cols-spacer" aria-hidden />
+        <div className="site-footer-cols-grid">
+          <ul>
+            {nav.map((n) => (
+              <li key={`${n.to}-${"hash" in n ? n.hash : ""}-${t(n.label, locale)}`}>
+                <Link to={n.to} hash={"hash" in n ? n.hash : undefined}>
+                  {t(n.label, locale)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <ul>
+            <li>(11) 999 990 000</li>
+            <li>
+              <a href="mailto:contato@manahouse.com">contato@manahouse.com</a>
+            </li>
+            <li>Ipanema, Rio de Janeiro</li>
+          </ul>
+          <ul className="site-footer-hours">
+            {hoursLines.map((line) => (
+              <li key={line.day.en}>
+                <span>{t(line.day, locale)}</span>
+                <span>{t(line.time, locale)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {showBottom ? (
+        <div className={`site-footer-bottom ${closer ? "is-closer" : ""}`}>
+          <p className="site-footer-tagline">
+            {locale === "pt" ? (
+              <>
+                Recover,
+                <br />
+                Ritual,
+                <br />
+                Belonging.
+              </>
+            ) : (
+              <>
+                Recover,
+                <br />
+                Ritual,
+                <br />
+                Belonging.
+              </>
+            )}
+          </p>
+          <img
+            src={symbol}
+            alt={logoAlt}
+            className="site-footer-symbol"
+            draggable={false}
+          />
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 export function SiteFooter({
   locale,
@@ -25,79 +132,25 @@ export function SiteFooter({
   compact?: boolean;
   closer?: boolean;
 }) {
-  const logoAlt = "Mana House AMO logo Ipanema Rio de Janeiro";
+  const showBottom = closer || !compact;
+
+  if (closer) {
+    return (
+      <footer
+        className={`site-footer site-footer--closer relative flex flex-col overflow-x-hidden bg-[#bdc9ad] text-[#171717] ${className}`}
+      >
+        <FooterBody locale={locale} closer showBottom />
+      </footer>
+    );
+  }
 
   return (
     <footer
       className={`site-footer relative overflow-x-hidden bg-[#bdc9ad] text-[#171717] ${
-        closer
-          ? "px-5 pb-8 pt-6 md:px-10 md:pb-10 md:pt-8"
-          : compact
-            ? "px-5 py-8 md:px-10"
-            : "px-5 pb-8 pt-12 md:px-10 md:pb-12 md:pt-10"
+        compact ? "is-compact" : ""
       } ${className}`}
     >
-      {/* 1) MANA HOUSE — quase de ponta a ponta, como na referência */}
-      <img
-        src={wordmark}
-        alt="MANA HOUSE"
-        className="mx-auto block h-auto w-full max-w-none select-none"
-        draggable={false}
-      />
-
-      {/* 2) Três colunas agrupadas na metade direita */}
-      <div
-        className={`ml-auto grid w-full max-w-xl grid-cols-1 gap-x-12 gap-y-6 text-left text-[13px] leading-[1.55] sm:grid-cols-3 md:max-w-2xl md:text-sm ${
-          closer ? "mt-10 md:mt-12" : compact ? "mt-10" : "mt-12 md:mt-14"
-        }`}
-      >
-        <ul className="space-y-1.5">
-          {nav.map((n) => (
-            <li key={`${n.to}-${"hash" in n ? n.hash : ""}-${t(n.label, locale)}`}>
-              <Link to={n.to} hash={"hash" in n ? n.hash : undefined} className="hover:underline">
-                {t(n.label, locale)}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <ul className="space-y-1.5">
-          <li>(11) 99999-0000</li>
-          <li>
-            <a href="mailto:contato@manahouse.com" className="hover:underline">
-              contato@manahouse.com
-            </a>
-          </li>
-          <li>Ipanema, Rio de Janeiro</li>
-        </ul>
-        <ul className="space-y-1.5">
-          <li>{t(siteCopy.weekdayHours, locale)}</li>
-          <li>{t(siteCopy.saturdayHours, locale)}</li>
-          <li>{t(siteCopy.sundayHours, locale)}</li>
-        </ul>
-      </div>
-
-      {/* 3) Recover no canto esquerdo · logo no canto direito (alinhado à coluna de horários) */}
-      {closer || !compact ? (
-        <div
-          className={`flex w-full items-end justify-between ${
-            closer ? "mt-16 md:mt-20" : "mt-20 md:mt-24"
-          }`}
-        >
-          <p className="site-footer-tagline text-[1.35rem] leading-[0.92] tracking-[-0.02em] md:text-[1.5rem]">
-            Recover.
-            <br />
-            Ritual.
-            <br />
-            Belonging.
-          </p>
-          <img
-            src={symbol}
-            alt={logoAlt}
-            className="block h-12 w-12 shrink-0 object-contain md:h-14 md:w-14"
-            draggable={false}
-          />
-        </div>
-      ) : null}
+      <FooterBody locale={locale} compact={compact} showBottom={showBottom} />
     </footer>
   );
 }

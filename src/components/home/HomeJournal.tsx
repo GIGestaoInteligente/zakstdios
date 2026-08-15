@@ -41,7 +41,7 @@ export function HomeJournal({ locale, posts }: { locale: SiteLocale; posts: Jour
         </Reveal>
       </div>
 
-      {/* Carrossel: primeira coluna alinha com menu / títulos */}
+      {/* 1ª ref: escala dos cards + imagens quadradas 1:1 */}
       <Carousel
         opts={{
           align: "start",
@@ -56,26 +56,29 @@ export function HomeJournal({ locale, posts }: { locale: SiteLocale; posts: Jour
           {slides.map((post, index) => (
             <CarouselItem
               key={`${post.title.en}-${index}`}
-              className="basis-[78%] pl-0 pr-3 sm:basis-[48%] sm:pr-4 md:basis-[38%] md:pr-5 lg:basis-[30%] xl:basis-[24%]"
+              className="basis-[78%] pl-0 pr-3 sm:basis-[48%] sm:pr-4 md:basis-[34%] md:pr-4 lg:basis-[26%] lg:pr-4 xl:basis-[23.5%]"
             >
-              <article className="group h-full">
-                <div className="journal-image aspect-[4/5] overflow-hidden">
+              {/* Bloco = largura do quadrado · título é o elemento mais forte */}
+              <article className="group flex w-full min-w-0 flex-col">
+                <div className="journal-image aspect-square w-full overflow-hidden">
                   <img
                     src={post.image}
                     alt={t(post.title, locale)}
                     loading="lazy"
-                    className="h-full w-full scale-[1.03] object-cover brightness-75 saturate-75 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-100 group-hover:saturate-100"
+                    className="h-full w-full scale-[1.03] object-cover object-center brightness-75 saturate-75 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-100 group-hover:saturate-100"
                   />
                 </div>
-                <p className="journal-meta mt-3 text-[10px] text-white/55">
-                  {post.date} · {post.read}
-                </p>
-                <h3 className="journal-title mt-1 text-xl leading-[0.95]">
-                  {t(post.title, locale)}
-                </h3>
-                <p className="journal-excerpt mt-3 text-xs leading-snug text-white/65">
-                  {t(post.excerpt, locale)}
-                </p>
+                <div className="w-full min-w-0 max-w-full">
+                  <p className="journal-meta mt-3 text-[0.6875rem] leading-none text-white/50">
+                    {post.date} · {post.read}
+                  </p>
+                  <h3 className="journal-title mt-2 w-full max-w-full text-[1.35rem] leading-[1.08] tracking-[-0.035em] text-white md:text-[1.45rem] lg:text-[1.5rem]">
+                    {t(post.title, locale)}
+                  </h3>
+                  <p className="journal-excerpt mt-2.5 w-full max-w-full text-[0.8125rem] leading-snug text-white/55">
+                    {t(post.excerpt, locale)}
+                  </p>
+                </div>
               </article>
             </CarouselItem>
           ))}

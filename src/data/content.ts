@@ -44,6 +44,31 @@ export const siteCopy = {
   about: {
     eyebrow: { pt: "Quem somos", en: "About" },
     title: { pt: "A casa", en: "The House" },
+    /** Quebras de linha fixas (EN = print de layout). */
+    bodyLines: {
+      pt: [
+        "Mana House é um social home club de recuperação e",
+        "comunidade em Ipanema. Sauna seca e a vapor, terapia",
+        "de contraste e massagem terapêutica reúnem tecnologia",
+        "de recuperação e toque qualificado em um mesmo espaço.",
+      ],
+      en: [
+        "Mana House is a recovery and community social home",
+        "club in Ipanema. Dry and steam sauna, contrast",
+        "therapy, and therapeutic massage bring recovery",
+        "technology and skilled touch into one space.",
+      ],
+    },
+    body2Lines: {
+      pt: [
+        "Para quem exige muito do próprio ritmo e sabe",
+        "que recuperar o corpo é parte do jogo.",
+      ],
+      en: [
+        "For people who ask a lot from their bodies and know",
+        "that recovering the body is part of the game.",
+      ],
+    },
     body: {
       pt: "Mana House é um social home club de recuperação e comunidade em Ipanema. Sauna seca e a vapor, terapia de contraste e massagem terapêutica reúnem tecnologia de recuperação e toque qualificado em um mesmo espaço.",
       en: "Mana House is a recovery and community social home club in Ipanema. Dry and steam sauna, contrast therapy, and therapeutic massage bring recovery technology and skilled touch into one space.",

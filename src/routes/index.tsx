@@ -173,14 +173,14 @@ function Index() {
     <div className="bg-[#f2eadf] text-[#171717]">
       <HomeHero locale={locale} />
 
-      <section className="experience-section relative bg-[#f2eadf] py-20 pl-[1.15rem] pr-0 md:py-28 md:pl-8">
-        <div className="flex flex-col gap-14 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
+      <section className="experience-section relative bg-[#f2eadf] pl-[1.15rem] pr-0 md:pl-8">
+        <div className="experience-layout flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="experience-intro relative z-[2] shrink-0 pr-4 md:pr-8">
             <Reveal>
-              <p className="experience-label text-xl leading-none tracking-[-0.03em]">
+              <p className="experience-label text-xl leading-none tracking-[-0.03em] md:text-[1.35rem]">
                 {locale === "pt" ? "A Experiência" : "The Experience"}
               </p>
-              <p className="experience-lede mt-4 max-w-[22rem] text-sm leading-snug md:max-w-[20rem]">
+              <p className="experience-lede mt-3 max-w-[16rem] text-sm leading-[1.35] md:max-w-[18rem] md:text-[0.95rem]">
                 {locale === "pt"
                   ? "Nove pilares que definem o ritmo da Mana House — recuperação, conexão e presença em Ipanema."
                   : "Nine pillars that define the rhythm of Mana House — recovery, connection and presence in Ipanema."}
@@ -191,10 +191,12 @@ function Index() {
           {/* Largura controlada em styles.css → .experience-list */}
           <div className="experience-list relative z-[2]">
             <div
-              key={`${activeItem.label.en}-${previewSlot}`}
               className={`experience-preview experience-preview--${previewSlot}`}
             >
-              <p className="experience-copy text-[0.90rem] leading-[1.35] text-[#171717]">
+              <p
+                key={`copy-${activeItem.label.en}`}
+                className="experience-copy text-[0.82rem] leading-[1.3] text-[#171717] md:text-[0.88rem]"
+              >
                 {t(activeItem.desc, locale)
                   .split("\n")
                   .map((line) => (
@@ -203,7 +205,10 @@ function Index() {
                     </span>
                   ))}
               </p>
-              <div className="relative aspect-square w-[7.5rem] shrink-0 overflow-hidden sm:w-32 lg:w-40">
+              <div
+                key={`media-${activeItem.label.en}`}
+                className="experience-preview-media relative aspect-square shrink-0 overflow-hidden"
+              >
                 <img
                   src={activeItem.image}
                   alt={t(activeItem.label, locale)}
@@ -215,13 +220,13 @@ function Index() {
 
             <div className="experience-rows">
               {experiences.map((item, index) => (
-                <Reveal key={item.label.en} className="experience-row" delay={index * 75}>
+                <Reveal key={item.label.en} className="experience-row" delay={index * 40}>
                   <button
                     type="button"
                     onClick={() => setActiveExperience(index)}
                     onMouseEnter={() => setActiveExperience(index)}
                     onFocus={() => setActiveExperience(index)}
-                    className={`experience-link block w-full whitespace-nowrap border-b border-black/30 text-left text-[clamp(1.80rem,3.9vw,2.95rem)] leading-[1.08] tracking-[-0.045em] ${
+                    className={`experience-link block w-full whitespace-nowrap text-left text-[clamp(1.95rem,4.4vw,3.25rem)] tracking-[-0.04em] ${
                       activeExperience === index ? "is-active text-black" : "text-[#d8bd94]"
                     }`}
                   >
@@ -235,7 +240,7 @@ function Index() {
       </section>
 
       {/* Ohana full-bleed — imagem canto a canto */}
-      <section className="ohana-section relative z-[1] -mt-6 w-full bg-[#dcc5a1] pt-0 md:-mt-10">
+      <section className="ohana-section relative z-[1] w-full bg-[#dcc5a1] pt-0">
         <div className="ohana-banner relative min-h-[360px] w-full overflow-hidden text-white md:min-h-[460px]">
           <img
             src={community}
@@ -251,12 +256,14 @@ function Index() {
                 {t(siteCopy.members.subtitle, locale)} {t(siteCopy.members.body, locale)}
               </p>
             </div>
-            <Link
-              to="/contato"
-              className="ohana-cta self-start rounded-full border border-white/80 px-7 py-4 text-sm transition hover:bg-white hover:text-black md:self-center"
-            >
-              {t(siteCopy.members.secondaryCta, locale)}
-            </Link>
+            <div className="ohana-cta-slot flex w-full justify-start md:w-auto md:justify-end md:self-center">
+              <Link
+                to="/contato"
+                className="ohana-cta inline-flex items-center justify-start rounded-full border border-white text-left text-sm leading-none text-white no-underline whitespace-nowrap transition hover:bg-white hover:text-black"
+              >
+                {t(siteCopy.members.secondaryCta, locale)}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
