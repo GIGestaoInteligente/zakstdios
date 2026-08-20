@@ -265,16 +265,16 @@ export const especialidades = [
     title: { pt: "Espreguiçadeira Parassimpática", en: "Parasympathetic Lounger" },
     short: { pt: "O sistema nervoso pede licença.", en: "The nervous system clocks out." },
     card: {
-      pt: "Bota pneumática, nervo vago e fotobiomodulação sistêmica ao mesmo tempo.",
-      en: "Pneumatic compression, vagus nerve stimulation and systemic photobiomodulation at once.",
+      pt: "Bota pneumática e estimulação do nervo vago ao mesmo tempo.",
+      en: "Pneumatic compression and vagus nerve stimulation at once.",
     },
     headline: {
-      pt: "Três tecnologias. Uma espreguiçadeira. O corpo sai diferente de como entrou.",
-      en: "Three technologies. One recliner. The body leaves different from how it arrived.",
+      pt: "Tecnologias em sinergia. Uma espreguiçadeira. O corpo sai diferente de como entrou.",
+      en: "Technologies in synergy. One recliner. The body leaves different from how it arrived.",
     },
     desc: {
-      pt: "A experiência ativa o modo de recuperação do organismo em três frentes: compressão sequencial, estimulação do nervo vago e terapia ILIB. A sinergia é o que torna a sessão diferente de qualquer tecnologia isolada.",
-      en: "The experience activates the body's recovery mode across three fronts: sequential compression, vagus nerve stimulation and ILIB therapy. The synergy is what makes it different from any single technology.",
+      pt: "A experiência ativa o modo de recuperação do organismo em duas frentes: compressão sequencial e estimulação do nervo vago. A sinergia é o que torna a sessão diferente de qualquer tecnologia isolada.",
+      en: "The experience activates the body's recovery mode across two fronts: sequential compression and vagus nerve stimulation. The synergy is what makes it different from any single technology.",
     },
     benefits: {
       pt: [
@@ -293,8 +293,8 @@ export const especialidades = [
       ],
     },
     imageAlt: {
-      pt: "recuperação parassimpática nervo vago ILIB Rio",
-      en: "parasympathetic recovery vagus nerve ILIB Rio",
+      pt: "recuperação parassimpática nervo vago Rio",
+      en: "parasympathetic recovery vagus nerve Rio",
     },
   },
   {

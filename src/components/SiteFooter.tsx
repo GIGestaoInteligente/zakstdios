@@ -88,6 +88,8 @@ function FooterBody({
         </div>
       </div>
 
+      {closer ? <div className="site-footer-push" aria-hidden /> : null}
+
       {showBottom ? (
         <div className={`site-footer-bottom ${closer ? "is-closer" : ""}`}>
           <p className="site-footer-tagline">

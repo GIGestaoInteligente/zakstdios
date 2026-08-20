@@ -313,6 +313,54 @@
       padding-top 400ms ease;
   }
 
+  /* Mobile: barra limpa — wordmark + hamburger (sem centro/actions por cima) */
+  @media (max-width: 767px) {
+    .site-header-inner {
+      height: 3.75rem;
+      padding-top: 0;
+      align-items: center;
+    }
+
+    .site-header--scrolled .site-header-inner {
+      height: 3.75rem;
+      padding-top: 0;
+      align-items: center;
+    }
+
+    .site-header-wordmark {
+      height: auto;
+      z-index: 4;
+    }
+
+    .site-header-wordmark.is-hidden {
+      position: relative;
+      left: auto;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      pointer-events: auto;
+    }
+
+    .site-header-wordmark-img {
+      width: 96px;
+    }
+
+    .site-header-center {
+      display: none;
+    }
+
+    .site-header-actions {
+      display: none !important;
+    }
+
+    .site-header-menu-btn {
+      position: relative;
+      z-index: 4;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+  }
+
   .site-header--scrolled .site-header-inner {
     height: 4.25rem;
     padding-top: 0;
@@ -1426,15 +1474,18 @@
     padding-bottom: 2rem;
   }
 
-  /* Home closer: full-height no desktop; em ecrãs menores acompanha o conteúdo */
+  /*
+    Home closer mobile:
+    - Compacts conteúdo + vão limitado após horários
+    - padding-top evita corte do wordmark no header
+  */
   .site-footer--closer {
-    min-height: auto;
-    padding: 4.25rem 1.25rem 1.75rem;
+    min-height: 100svh;
+    padding: 5.25rem 1.25rem 1.25rem;
   }
 
   @media (min-width: 768px) {
     .site-footer--closer {
-      min-height: 100svh;
       padding: 5.5rem 2.5rem 2.25rem;
     }
   }
@@ -1442,6 +1493,31 @@
   @media (min-width: 1024px) {
     .site-footer--closer {
       padding: 6.25rem 2.5rem 2.5rem;
+    }
+  }
+
+  /*
+    Spacer (reservado): desligado no mobile — Recover usa margin-top: auto.
+  */
+  .site-footer-push {
+    display: none;
+    flex: 0 0 auto;
+    height: clamp(2.75rem, 10vh, 5rem);
+    pointer-events: none;
+  }
+
+  @media (max-width: 1023px) {
+    .site-footer--closer .site-footer-cols.is-closer {
+      margin-top: 1.25rem;
+    }
+
+    .site-footer--closer .site-footer-cols-grid {
+      gap: 1.15rem;
+    }
+
+    .site-footer--closer .site-footer-symbol {
+      width: 2.85rem;
+      height: 2.85rem;
     }
   }
 
@@ -1475,7 +1551,13 @@
   }
 
   .site-footer-cols.is-closer {
-    margin-top: clamp(2.5rem, 7vh, 4.5rem);
+    margin-top: clamp(1.5rem, 4vh, 3rem);
+  }
+
+  @media (min-width: 768px) {
+    .site-footer-cols.is-closer {
+      margin-top: clamp(2.5rem, 7vh, 4.5rem);
+    }
   }
 
   .site-footer-cols.is-compact {
@@ -1560,24 +1642,28 @@
   }
 
   /*
-    Recover + símbolo: em ecrã pequeno fica logo abaixo das cols (sem auto
-    a empurrar para o fundo do 100svh). Em desktop mantém canto inferior.
+    Recover + símbolo: no mobile ancora em baixo (reduz faixa vazia sob o bloco).
+    Spacer desligado — o auto faz o trabalho.
   */
   .site-footer-bottom.is-closer {
-    margin-top: clamp(2.25rem, 6vh, 3.5rem);
-    padding-top: 0;
-  }
-
-  @media (min-width: 768px) {
-    .site-footer-bottom.is-closer {
-      margin-top: clamp(2.75rem, 7vh, 4.5rem);
-    }
+    margin-top: auto;
+    padding-top: 1.5rem;
+    padding-bottom: 0;
   }
 
   @media (min-width: 1024px) {
     .site-footer-bottom.is-closer {
-      margin-top: auto;
       padding-top: clamp(2.5rem, 6vh, 4.5rem);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .site-footer--closer .site-footer-push {
+      display: none;
+    }
+
+    .site-footer--closer {
+      padding-bottom: 1rem;
     }
   }
 

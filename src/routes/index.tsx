@@ -57,14 +57,6 @@ const experiences = [
     },
   },
   {
-    label: { pt: "ILIB", en: "ILIB" },
-    image: hotYoga,
-    desc: {
-      pt: "Fotobiomodulação sistêmica como suporte ao equilíbrio do organismo.",
-      en: "Systemic photobiomodulation supporting the body's balance.",
-    },
-  },
-  {
     label: { pt: "Terapia de Luz Vermelha", en: "Red Light Therapy" },
     image: saunaPortrait,
     desc: {
@@ -182,8 +174,8 @@ function Index() {
               </p>
               <p className="experience-lede mt-3 max-w-[16rem] text-sm leading-[1.35] md:max-w-[18rem] md:text-[0.95rem]">
                 {locale === "pt"
-                  ? "Nove pilares que definem o ritmo da Mana House — recuperação, conexão e presença em Ipanema."
-                  : "Nine pillars that define the rhythm of Mana House — recovery, connection and presence in Ipanema."}
+                  ? "Oito pilares que definem o ritmo da Mana House — recuperação, conexão e presença em Ipanema."
+                  : "Eight pillars that define the rhythm of Mana House — recovery, connection and presence in Ipanema."}
               </p>
             </Reveal>
           </div>

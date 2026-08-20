@@ -163,7 +163,7 @@ export function Layout() {
 
           <button
             type="button"
-            className="ml-auto p-2 md:hidden"
+            className="site-header-menu-btn ml-auto p-2 md:hidden"
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-label={locale === "pt" ? "Abrir menu" : "Open menu"}
